@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  teno_debug: ^0.0.1
   teno_mindmap:
     path: ../
 
