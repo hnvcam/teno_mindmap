@@ -14,15 +14,13 @@ class GridCanvas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CanvasActivityDetector(
-      child: ClipRect(
-        child: BlocBuilder<CanvasBloc, CanvasState>(
-          builder: (context, state) {
-            return CustomPaint(
-              size: Size.infinite,
-              painter: GridPainter(scale: state.scale, offset: state.offset),
-            );
-          },
-        ),
+      child: BlocBuilder<CanvasBloc, CanvasState>(
+        builder: (context, state) {
+          return CustomPaint(
+            size: Size.infinite,
+            painter: GridPainter(scale: state.scale, offset: state.offset),
+          );
+        },
       ),
     );
   }

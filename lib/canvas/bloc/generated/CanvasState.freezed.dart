@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$CanvasState {
 
 // @Default provides default values for the initial state.
- double get scale; Offset get offset; double get baseScale; Offset get baseOffset;
+ double get scale; Offset get offset;
 /// Create a copy of CanvasState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,16 +27,16 @@ $CanvasStateCopyWith<CanvasState> get copyWith => _$CanvasStateCopyWithImpl<Canv
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CanvasState&&(identical(other.scale, scale) || other.scale == scale)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.baseScale, baseScale) || other.baseScale == baseScale)&&(identical(other.baseOffset, baseOffset) || other.baseOffset == baseOffset));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CanvasState&&(identical(other.scale, scale) || other.scale == scale)&&(identical(other.offset, offset) || other.offset == offset));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,scale,offset,baseScale,baseOffset);
+int get hashCode => Object.hash(runtimeType,scale,offset);
 
 @override
 String toString() {
-  return 'CanvasState(scale: $scale, offset: $offset, baseScale: $baseScale, baseOffset: $baseOffset)';
+  return 'CanvasState(scale: $scale, offset: $offset)';
 }
 
 
@@ -47,7 +47,7 @@ abstract mixin class $CanvasStateCopyWith<$Res>  {
   factory $CanvasStateCopyWith(CanvasState value, $Res Function(CanvasState) _then) = _$CanvasStateCopyWithImpl;
 @useResult
 $Res call({
- double scale, Offset offset, double baseScale, Offset baseOffset
+ double scale, Offset offset
 });
 
 
@@ -64,12 +64,10 @@ class _$CanvasStateCopyWithImpl<$Res>
 
 /// Create a copy of CanvasState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? scale = null,Object? offset = null,Object? baseScale = null,Object? baseOffset = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? scale = null,Object? offset = null,}) {
   return _then(_self.copyWith(
 scale: null == scale ? _self.scale : scale // ignore: cast_nullable_to_non_nullable
 as double,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as Offset,baseScale: null == baseScale ? _self.baseScale : baseScale // ignore: cast_nullable_to_non_nullable
-as double,baseOffset: null == baseOffset ? _self.baseOffset : baseOffset // ignore: cast_nullable_to_non_nullable
 as Offset,
   ));
 }
@@ -81,14 +79,12 @@ as Offset,
 
 
 class _CanvasState implements CanvasState {
-  const _CanvasState({this.scale = 1.0, this.offset = Offset.zero, this.baseScale = 1.0, this.baseOffset = Offset.zero});
+  const _CanvasState({this.scale = 1.0, this.offset = Offset.zero});
   
 
 // @Default provides default values for the initial state.
 @override@JsonKey() final  double scale;
 @override@JsonKey() final  Offset offset;
-@override@JsonKey() final  double baseScale;
-@override@JsonKey() final  Offset baseOffset;
 
 /// Create a copy of CanvasState
 /// with the given fields replaced by the non-null parameter values.
@@ -100,16 +96,16 @@ _$CanvasStateCopyWith<_CanvasState> get copyWith => __$CanvasStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CanvasState&&(identical(other.scale, scale) || other.scale == scale)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.baseScale, baseScale) || other.baseScale == baseScale)&&(identical(other.baseOffset, baseOffset) || other.baseOffset == baseOffset));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CanvasState&&(identical(other.scale, scale) || other.scale == scale)&&(identical(other.offset, offset) || other.offset == offset));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,scale,offset,baseScale,baseOffset);
+int get hashCode => Object.hash(runtimeType,scale,offset);
 
 @override
 String toString() {
-  return 'CanvasState(scale: $scale, offset: $offset, baseScale: $baseScale, baseOffset: $baseOffset)';
+  return 'CanvasState(scale: $scale, offset: $offset)';
 }
 
 
@@ -120,7 +116,7 @@ abstract mixin class _$CanvasStateCopyWith<$Res> implements $CanvasStateCopyWith
   factory _$CanvasStateCopyWith(_CanvasState value, $Res Function(_CanvasState) _then) = __$CanvasStateCopyWithImpl;
 @override @useResult
 $Res call({
- double scale, Offset offset, double baseScale, Offset baseOffset
+ double scale, Offset offset
 });
 
 
@@ -137,12 +133,10 @@ class __$CanvasStateCopyWithImpl<$Res>
 
 /// Create a copy of CanvasState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? scale = null,Object? offset = null,Object? baseScale = null,Object? baseOffset = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? scale = null,Object? offset = null,}) {
   return _then(_CanvasState(
 scale: null == scale ? _self.scale : scale // ignore: cast_nullable_to_non_nullable
 as double,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as Offset,baseScale: null == baseScale ? _self.baseScale : baseScale // ignore: cast_nullable_to_non_nullable
-as double,baseOffset: null == baseOffset ? _self.baseOffset : baseOffset // ignore: cast_nullable_to_non_nullable
 as Offset,
   ));
 }

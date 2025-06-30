@@ -6,3 +6,13 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     file_names: false
+
+analyzer:
+  exclude:
+    - lib/**/generated/*.dart
+    - .dart_tool
+    - .idea
+    - examples/.dart_tool
+    - examples/.idea
+    - examples/build
+    - examples/android
