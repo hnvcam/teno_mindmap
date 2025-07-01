@@ -63,9 +63,13 @@ class Dashboard extends StatelessWidget {
                     Builder(
                       builder: (context) {
                         final nodeMeta = state.nodeMetas[node.id]!;
-                        return Transform.translate(
-                          offset: canvasState.offset + nodeMeta.position,
+                        final scaledPosition =
+                            nodeMeta.position * canvasState.scale;
+                        return Positioned(
+                          left: canvasState.renderOffset.dx + scaledPosition.dx,
+                          top: canvasState.renderOffset.dy + scaledPosition.dy,
                           child: Transform.scale(
+                            alignment: Alignment.topLeft,
                             scale: canvasState.scale,
                             child: nodeRender(context, node, nodeMeta),
                           ),

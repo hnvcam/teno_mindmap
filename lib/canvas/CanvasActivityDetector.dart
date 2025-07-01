@@ -1,29 +1,18 @@
-import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:teno_mindmap/canvas/bloc/CanvasBloc.dart';
 
 class CanvasActivityDetector extends StatefulWidget {
   final Widget child;
-  final double _minScale;
-  final double _maxScale;
-  final double _scalingStep;
-  final Duration _scalingDelay;
 
-  CanvasActivityDetector({
-    super.key,
-    required this.child,
-    double minScale = 0.1,
-    double maxScale = 10,
-    double scalingStep = 0.1,
-    int scalingFps = 60,
-  }) : _minScale = minScale.clamp(0.01, 1),
-       _maxScale = maxScale.clamp(1, 100),
-       _scalingStep = scalingStep.clamp(0.01, 0.99),
-       _scalingDelay = Duration(
-         milliseconds: (1000 / scalingFps.clamp(1, 120)).round(),
-       );
+  CanvasActivityDetector({super.key, required this.child, int scalingFps = 60})
+    : _scalingDelay = Duration(
+        milliseconds: (1000 / scalingFps.clamp(1, 120)).round(),
+      );
+
+  /// This detector will be responsible for how fast we can zoom in and out (behavior)
+  /// But the actual zoom level is controlled by the bloc (business logic)
+  final Duration _scalingDelay;
 
   @override
   State<CanvasActivityDetector> createState() => _CanvasActivityDetectorState();
@@ -36,7 +25,13 @@ class _CanvasActivityDetectorState extends State<CanvasActivityDetector> {
     return Listener(
       onPointerSignal: (event) {
         if (event is PointerScaleEvent) {
-          _handleScale(context, event.scale, event.delta, event.timeStamp);
+          _handleScale(
+            context,
+            event.scale,
+            // because this CanvasActivityDetector and canvas share the same coordinate.
+            event.localPosition,
+            event.timeStamp,
+          );
         }
       },
       child: GestureDetector(
@@ -49,7 +44,8 @@ class _CanvasActivityDetectorState extends State<CanvasActivityDetector> {
             _handleScale(
               context,
               details.scale,
-              details.focalPointDelta,
+              // because this CanvasActivityDetector and canvas share the same coordinate.
+              details.localFocalPoint,
               details.sourceTimeStamp ?? Duration.zero,
             );
           }
@@ -70,28 +66,16 @@ class _CanvasActivityDetectorState extends State<CanvasActivityDetector> {
   void _handleScale(
     BuildContext context,
     double scale,
-    Offset delta,
+    Offset pointerPosition,
     Duration timeStamp,
   ) {
     if (timeStamp - _lastScalingTimeStamp < widget._scalingDelay) {
       return;
     }
     _lastScalingTimeStamp = timeStamp;
-    final currentState = CanvasBloc.read(context).state;
-    double effectiveScale = 1.0;
-    if (scale > 1) {
-      effectiveScale = 1 + widget._scalingStep;
-    } else if (scale < 1) {
-      effectiveScale = 1 - widget._scalingStep;
-    }
-    final newScale = clampDouble(
-      effectiveScale * currentState.scale,
-      widget._minScale,
-      widget._maxScale,
-    );
-    final newOffset = delta / newScale;
+
     CanvasBloc.read(
       context,
-    ).add(CanvasTransformed(scale: newScale, offset: newOffset));
+    ).add(CanvasTransformed(scale: scale, pointerPosition: pointerPosition));
   }
 }

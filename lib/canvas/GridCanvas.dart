@@ -1,6 +1,7 @@
 // ----------------------------------------------------
 // The Grid Canvas Widget
 // ----------------------------------------------------
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teno_mindmap/canvas/CanvasActivityDetector.dart';
@@ -9,7 +10,11 @@ import 'bloc/CanvasBloc.dart';
 import 'bloc/CanvasState.dart';
 
 class GridCanvas extends StatelessWidget {
-  const GridCanvas({super.key});
+  GridCanvas({super.key, Color? gridColor, this.gridSize = 100})
+    : gridColor = gridColor ?? Colors.grey.shade300;
+
+  final Color gridColor;
+  final double gridSize;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,12 @@ class GridCanvas extends StatelessWidget {
         builder: (context, state) {
           return CustomPaint(
             size: Size.infinite,
-            painter: GridPainter(scale: state.scale, offset: state.offset),
+            painter: GridPainter(
+              scale: state.scale,
+              offset: state.offset,
+              gridColor: gridColor,
+              gridSize: gridSize,
+            ),
           );
         },
       ),
@@ -32,17 +42,22 @@ class GridCanvas extends StatelessWidget {
 class GridPainter extends CustomPainter {
   final double scale;
   final Offset offset;
+  final Color gridColor;
+  final double gridSize;
 
-  GridPainter({required this.scale, required this.offset});
+  GridPainter({
+    required this.scale,
+    required this.offset,
+    required this.gridColor,
+    required this.gridSize,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint =
         Paint()
-          ..color = Colors.grey.shade300
+          ..color = gridColor
           ..strokeWidth = 1.0;
-
-    const double gridSize = 100.0;
 
     // Calculate the visible area based on the canvas size, scale, and offset
     final double left = -offset.dx;
@@ -70,6 +85,24 @@ class GridPainter extends CustomPainter {
       // Convert world coordinates to screen coordinates before drawing
       final double screenY = (y + offset.dy) * scale;
       canvas.drawLine(Offset(0, screenY), Offset(size.width, screenY), paint);
+    }
+
+    /// this draws the root position of the canvas
+    if (kDebugMode) {
+      final Paint rootPaint =
+          Paint()
+            ..color = Colors.black
+            ..strokeWidth = 1.0;
+      canvas.drawLine(
+        Offset(offset.dx - gridSize / 4, offset.dy) * scale,
+        Offset(offset.dx + gridSize / 4, offset.dy) * scale,
+        rootPaint,
+      );
+      canvas.drawLine(
+        Offset(offset.dx, offset.dy - gridSize / 4) * scale,
+        Offset(offset.dx, offset.dy + gridSize / 4) * scale,
+        rootPaint,
+      );
     }
   }
 

@@ -78,8 +78,8 @@ as Offset,
 /// @nodoc
 
 
-class _CanvasState implements CanvasState {
-  const _CanvasState({this.scale = 1.0, this.offset = Offset.zero});
+class _CanvasState extends CanvasState {
+  const _CanvasState({this.scale = 1.0, this.offset = Offset.zero}): super._();
   
 
 // @Default provides default values for the initial state.

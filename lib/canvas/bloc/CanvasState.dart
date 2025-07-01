@@ -6,9 +6,13 @@ part 'generated/CanvasState.freezed.dart';
 
 @freezed
 sealed class CanvasState with _$CanvasState {
+  const CanvasState._();
+
   const factory CanvasState({
     // @Default provides default values for the initial state.
     @Default(1.0) double scale,
     @Default(Offset.zero) Offset offset,
   }) = _CanvasState;
+
+  Offset get renderOffset => offset * scale;
 }

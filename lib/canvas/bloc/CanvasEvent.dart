@@ -11,6 +11,6 @@ class CanvasPanned extends CanvasEvent {
 
 class CanvasTransformed extends CanvasEvent {
   final double scale;
-  final Offset offset;
-  const CanvasTransformed({required this.scale, required this.offset});
+  final Offset pointerPosition;
+  const CanvasTransformed({required this.scale, required this.pointerPosition});
 }
