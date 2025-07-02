@@ -91,4 +91,11 @@ sealed class DashboardState with _$DashboardState {
       nodeMetas: Map.of(nodeMetas)..[nodeId] = newMeta.copyWith(id: nodeId),
     );
   }
+
+  NodeMeta getNodeMeta(Node node) {
+    if (!nodeMetas.containsKey(node.id)) {
+      throw Exception('Node meta not found');
+    }
+    return nodeMetas[node.id]!;
+  }
 }

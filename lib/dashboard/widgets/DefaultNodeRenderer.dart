@@ -4,10 +4,14 @@ import '../../models/Node.dart';
 import '../../models/NodeMeta.dart';
 
 class DefaultNodeRenderer extends StatelessWidget {
-  const DefaultNodeRenderer(this.node, {super.key, required this.meta});
+  const DefaultNodeRenderer({
+    super.key,
+    required this.node,
+    required this.nodeMeta,
+  });
 
   final Node node;
-  final NodeMeta meta;
+  final NodeMeta nodeMeta;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class DefaultNodeRenderer extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: theme.primaryColor),
       ),
-      child: Text(meta.title),
+      child: Text(nodeMeta.title),
     );
   }
 }
