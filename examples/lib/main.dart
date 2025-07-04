@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(seedColor: Colors.deepPurple);
     return MaterialApp(
       title: 'Teno Mind Map Editor',
       theme: ThemeData(
@@ -33,13 +34,32 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: colorScheme,
+        iconButtonTheme: IconButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: withStates(colorScheme.primary),
+            foregroundColor: withStates(colorScheme.onPrimary),
+          ),
+        ),
       ),
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [MindMap.localizationDelegate],
     );
   }
 }
+
+WidgetStateProperty<T> withStates<T>(
+  T defaultState, [
+  Map<WidgetState, T>? stateMap,
+]) => WidgetStateProperty.resolveWith((states) {
+  final resolvedState =
+      stateMap?.keys.where((state) => states.contains(state)).firstOrNull;
+  if (resolvedState != null) {
+    return stateMap![resolvedState] as T;
+  }
+  return defaultState;
+});
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

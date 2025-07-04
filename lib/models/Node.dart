@@ -10,11 +10,11 @@ sealed class Node with _$Node {
   const factory Node({
     required String id,
     @Default([]) List<Node> children,
-    Node? parent,
+    String? parentId,
   }) = _Node;
 
   factory Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
 
   bool get isLeaf => children.isEmpty;
-  bool get isRoot => parent == null;
+  bool get isRoot => parentId == null;
 }

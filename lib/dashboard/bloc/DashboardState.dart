@@ -18,6 +18,7 @@ sealed class DashboardState with _$DashboardState {
     @Default({}) Map<String, Node> nodes,
     @Default({}) Map<String, NodeMeta> nodeMetas,
     Node? root,
+    @Default(50.0) double spacing,
   }) = _DashboardState;
 
   factory DashboardState.fromJson(Map<String, dynamic> json) =>
@@ -44,7 +45,7 @@ sealed class DashboardState with _$DashboardState {
       throw Exception('Parent node not found');
     }
     final parentNode = nodes[parentId];
-    final newNode = Node(id: uuid.v4(), parent: parentNode);
+    final newNode = Node(id: uuid.v4(), parentId: parentId);
     final newNodeMeta = nodeMeta.copyWith(id: newNode.id);
     return copyWith(
       nodes:
@@ -65,9 +66,9 @@ sealed class DashboardState with _$DashboardState {
     if (node!.isRoot) {
       throw Exception('Cannot remove root node');
     }
-    final parentNode = node.parent;
+    final parentNode = nodes[node.parentId];
     if (parentNode == null) {
-      throw Exception('Node has no parent');
+      throw Exception('Node has non-existence parent');
     }
     return copyWith(
       nodes:
@@ -97,5 +98,18 @@ sealed class DashboardState with _$DashboardState {
       throw Exception('Node meta not found');
     }
     return nodeMetas[node.id]!;
+  }
+
+  Node parentOf(Node node) {
+    if (node.isRoot) {
+      throw Exception(
+        'Root node has no parent. Please check for node.isRoot before calling this method.',
+      );
+    }
+    final parent = nodes[node.parentId];
+    if (parent == null) {
+      throw Exception('Node has non-existence parent');
+    }
+    return parent;
   }
 }

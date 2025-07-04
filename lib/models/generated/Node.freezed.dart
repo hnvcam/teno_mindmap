@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Node {
 
- String get id; List<Node> get children; Node? get parent;
+ String get id; List<Node> get children; String? get parentId;
 /// Create a copy of Node
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $NodeCopyWith<Node> get copyWith => _$NodeCopyWithImpl<Node>(this as Node, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Node&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.children, children)&&(identical(other.parent, parent) || other.parent == parent));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Node&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.children, children)&&(identical(other.parentId, parentId) || other.parentId == parentId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(children),parent);
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(children),parentId);
 
 @override
 String toString() {
-  return 'Node(id: $id, children: $children, parent: $parent)';
+  return 'Node(id: $id, children: $children, parentId: $parentId)';
 }
 
 
@@ -49,11 +49,11 @@ abstract mixin class $NodeCopyWith<$Res>  {
   factory $NodeCopyWith(Node value, $Res Function(Node) _then) = _$NodeCopyWithImpl;
 @useResult
 $Res call({
- String id, List<Node> children, Node? parent
+ String id, List<Node> children, String? parentId
 });
 
 
-$NodeCopyWith<$Res>? get parent;
+
 
 }
 /// @nodoc
@@ -66,27 +66,15 @@ class _$NodeCopyWithImpl<$Res>
 
 /// Create a copy of Node
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? children = null,Object? parent = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? children = null,Object? parentId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,children: null == children ? _self.children : children // ignore: cast_nullable_to_non_nullable
-as List<Node>,parent: freezed == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
-as Node?,
+as List<Node>,parentId: freezed == parentId ? _self.parentId : parentId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
-/// Create a copy of Node
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NodeCopyWith<$Res>? get parent {
-    if (_self.parent == null) {
-    return null;
-  }
 
-  return $NodeCopyWith<$Res>(_self.parent!, (value) {
-    return _then(_self.copyWith(parent: value));
-  });
-}
 }
 
 
@@ -94,7 +82,7 @@ $NodeCopyWith<$Res>? get parent {
 @JsonSerializable()
 
 class _Node extends Node {
-  const _Node({required this.id, final  List<Node> children = const [], this.parent}): _children = children,super._();
+  const _Node({required this.id, final  List<Node> children = const [], this.parentId}): _children = children,super._();
   factory _Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
 
 @override final  String id;
@@ -105,7 +93,7 @@ class _Node extends Node {
   return EqualUnmodifiableListView(_children);
 }
 
-@override final  Node? parent;
+@override final  String? parentId;
 
 /// Create a copy of Node
 /// with the given fields replaced by the non-null parameter values.
@@ -120,16 +108,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Node&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._children, _children)&&(identical(other.parent, parent) || other.parent == parent));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Node&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._children, _children)&&(identical(other.parentId, parentId) || other.parentId == parentId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_children),parent);
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_children),parentId);
 
 @override
 String toString() {
-  return 'Node(id: $id, children: $children, parent: $parent)';
+  return 'Node(id: $id, children: $children, parentId: $parentId)';
 }
 
 
@@ -140,11 +128,11 @@ abstract mixin class _$NodeCopyWith<$Res> implements $NodeCopyWith<$Res> {
   factory _$NodeCopyWith(_Node value, $Res Function(_Node) _then) = __$NodeCopyWithImpl;
 @override @useResult
 $Res call({
- String id, List<Node> children, Node? parent
+ String id, List<Node> children, String? parentId
 });
 
 
-@override $NodeCopyWith<$Res>? get parent;
+
 
 }
 /// @nodoc
@@ -157,28 +145,16 @@ class __$NodeCopyWithImpl<$Res>
 
 /// Create a copy of Node
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? children = null,Object? parent = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? children = null,Object? parentId = freezed,}) {
   return _then(_Node(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,children: null == children ? _self._children : children // ignore: cast_nullable_to_non_nullable
-as List<Node>,parent: freezed == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
-as Node?,
+as List<Node>,parentId: freezed == parentId ? _self.parentId : parentId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
-/// Create a copy of Node
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NodeCopyWith<$Res>? get parent {
-    if (_self.parent == null) {
-    return null;
-  }
 
-  return $NodeCopyWith<$Res>(_self.parent!, (value) {
-    return _then(_self.copyWith(parent: value));
-  });
-}
 }
 
 // dart format on

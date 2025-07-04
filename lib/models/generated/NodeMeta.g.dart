@@ -15,6 +15,7 @@ _NodeMeta _$NodeMetaFromJson(Map<String, dynamic> json) => _NodeMeta(
           : const OffsetJsonConverter().fromJson(
             json['position'] as Map<String, double>,
           ),
+  isPositionLocked: json['isPositionLocked'] as bool? ?? false,
   size:
       json['size'] == null
           ? Size.zero
@@ -29,6 +30,7 @@ Map<String, dynamic> _$NodeMetaToJson(_NodeMeta instance) => <String, dynamic>{
   'id': instance.id,
   'title': instance.title,
   'position': const OffsetJsonConverter().toJson(instance.position),
+  'isPositionLocked': instance.isPositionLocked,
   'size': const SizeJsonConverter().toJson(instance.size),
   'type': instance.type,
   'data': instance.data,

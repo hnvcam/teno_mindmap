@@ -18,9 +18,10 @@ class DefaultNodeRenderer extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: theme.primaryColor),
       ),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Text(nodeMeta.title),
     );
   }

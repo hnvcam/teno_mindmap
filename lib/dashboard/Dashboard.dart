@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_menu/star_menu.dart';
+import 'package:teno_mindmap/dashboard/widgets/IconTextButton.dart';
 import 'package:teno_mindmap/dashboard/widgets/NodeWrapper.dart';
+import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
 import 'package:teno_mindmap/models/NodeMeta.dart';
 
 import '../models/Node.dart';
@@ -111,6 +113,7 @@ class _DashboardState extends State<Dashboard> {
       renderObject.paintBounds.width,
       renderObject.paintBounds.height,
     );
+    final l10n = AppLocalizations.of(context)!;
     StarMenuOverlay.displayStarMenu(
       context,
       StarMenu(
@@ -124,9 +127,25 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
         items: [
-          IconButton(icon: Icon(Icons.add), onPressed: () {}),
-          IconButton(icon: Icon(Icons.add), onPressed: () {}),
-          IconButton(icon: Icon(Icons.add), onPressed: () {}),
+          IconTextButton(
+            icon: Icons.add,
+            text: l10n.addChild,
+            onPressed:
+                () => DashboardBloc.read(context).add(
+                  RequestAddChildNode(
+                    parentNode: node,
+                    parentNodeMeta: nodeMeta,
+                    parentSize: renderObject.size,
+                  ),
+                ),
+          ),
+          IconTextButton(icon: Icons.edit, text: l10n.edit, onPressed: () {}),
+          if (!node.isRoot)
+            IconTextButton(
+              icon: Icons.delete,
+              text: l10n.delete,
+              onPressed: () {},
+            ),
         ],
         parentContext: context,
       ),

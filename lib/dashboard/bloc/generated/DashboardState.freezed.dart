@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DashboardState {
 
- Map<String, Node> get nodes; Map<String, NodeMeta> get nodeMetas; Node? get root;
+ Map<String, Node> get nodes; Map<String, NodeMeta> get nodeMetas; Node? get root; double get spacing;
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $DashboardStateCopyWith<DashboardState> get copyWith => _$DashboardStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&const DeepCollectionEquality().equals(other.nodes, nodes)&&const DeepCollectionEquality().equals(other.nodeMetas, nodeMetas)&&(identical(other.root, root) || other.root == root));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&const DeepCollectionEquality().equals(other.nodes, nodes)&&const DeepCollectionEquality().equals(other.nodeMetas, nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.spacing, spacing) || other.spacing == spacing));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(nodes),const DeepCollectionEquality().hash(nodeMetas),root);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(nodes),const DeepCollectionEquality().hash(nodeMetas),root,spacing);
 
 @override
 String toString() {
-  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root)';
+  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, spacing: $spacing)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $DashboardStateCopyWith<$Res>  {
   factory $DashboardStateCopyWith(DashboardState value, $Res Function(DashboardState) _then) = _$DashboardStateCopyWithImpl;
 @useResult
 $Res call({
- Map<String, Node> nodes, Map<String, NodeMeta> nodeMetas, Node? root
+ Map<String, Node> nodes, Map<String, NodeMeta> nodeMetas, Node? root, double spacing
 });
 
 
@@ -66,12 +66,13 @@ class _$DashboardStateCopyWithImpl<$Res>
 
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? nodes = null,Object? nodeMetas = null,Object? root = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? nodes = null,Object? nodeMetas = null,Object? root = freezed,Object? spacing = null,}) {
   return _then(_self.copyWith(
 nodes: null == nodes ? _self.nodes : nodes // ignore: cast_nullable_to_non_nullable
 as Map<String, Node>,nodeMetas: null == nodeMetas ? _self.nodeMetas : nodeMetas // ignore: cast_nullable_to_non_nullable
 as Map<String, NodeMeta>,root: freezed == root ? _self.root : root // ignore: cast_nullable_to_non_nullable
-as Node?,
+as Node?,spacing: null == spacing ? _self.spacing : spacing // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 /// Create a copy of DashboardState
@@ -94,7 +95,7 @@ $NodeCopyWith<$Res>? get root {
 @JsonSerializable()
 
 class _DashboardState extends DashboardState {
-  const _DashboardState({final  Map<String, Node> nodes = const {}, final  Map<String, NodeMeta> nodeMetas = const {}, this.root}): _nodes = nodes,_nodeMetas = nodeMetas,super._();
+  const _DashboardState({final  Map<String, Node> nodes = const {}, final  Map<String, NodeMeta> nodeMetas = const {}, this.root, this.spacing = 50.0}): _nodes = nodes,_nodeMetas = nodeMetas,super._();
   factory _DashboardState.fromJson(Map<String, dynamic> json) => _$DashboardStateFromJson(json);
 
  final  Map<String, Node> _nodes;
@@ -112,6 +113,7 @@ class _DashboardState extends DashboardState {
 }
 
 @override final  Node? root;
+@override@JsonKey() final  double spacing;
 
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
@@ -126,16 +128,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&const DeepCollectionEquality().equals(other._nodes, _nodes)&&const DeepCollectionEquality().equals(other._nodeMetas, _nodeMetas)&&(identical(other.root, root) || other.root == root));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&const DeepCollectionEquality().equals(other._nodes, _nodes)&&const DeepCollectionEquality().equals(other._nodeMetas, _nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.spacing, spacing) || other.spacing == spacing));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_nodes),const DeepCollectionEquality().hash(_nodeMetas),root);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_nodes),const DeepCollectionEquality().hash(_nodeMetas),root,spacing);
 
 @override
 String toString() {
-  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root)';
+  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, spacing: $spacing)';
 }
 
 
@@ -146,7 +148,7 @@ abstract mixin class _$DashboardStateCopyWith<$Res> implements $DashboardStateCo
   factory _$DashboardStateCopyWith(_DashboardState value, $Res Function(_DashboardState) _then) = __$DashboardStateCopyWithImpl;
 @override @useResult
 $Res call({
- Map<String, Node> nodes, Map<String, NodeMeta> nodeMetas, Node? root
+ Map<String, Node> nodes, Map<String, NodeMeta> nodeMetas, Node? root, double spacing
 });
 
 
@@ -163,12 +165,13 @@ class __$DashboardStateCopyWithImpl<$Res>
 
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? nodes = null,Object? nodeMetas = null,Object? root = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? nodes = null,Object? nodeMetas = null,Object? root = freezed,Object? spacing = null,}) {
   return _then(_DashboardState(
 nodes: null == nodes ? _self._nodes : nodes // ignore: cast_nullable_to_non_nullable
 as Map<String, Node>,nodeMetas: null == nodeMetas ? _self._nodeMetas : nodeMetas // ignore: cast_nullable_to_non_nullable
 as Map<String, NodeMeta>,root: freezed == root ? _self.root : root // ignore: cast_nullable_to_non_nullable
-as Node?,
+as Node?,spacing: null == spacing ? _self.spacing : spacing // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 

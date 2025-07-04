@@ -22,6 +22,7 @@ _DashboardState _$DashboardStateFromJson(Map<String, dynamic> json) =>
           json['root'] == null
               ? null
               : Node.fromJson(json['root'] as Map<String, dynamic>),
+      spacing: (json['spacing'] as num?)?.toDouble() ?? 50.0,
     );
 
 Map<String, dynamic> _$DashboardStateToJson(_DashboardState instance) =>
@@ -29,4 +30,5 @@ Map<String, dynamic> _$DashboardStateToJson(_DashboardState instance) =>
       'nodes': instance.nodes,
       'nodeMetas': instance.nodeMetas,
       'root': instance.root,
+      'spacing': instance.spacing,
     };

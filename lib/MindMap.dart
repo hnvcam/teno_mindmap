@@ -5,10 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teno_mindmap/canvas/GridCanvas.dart';
 import 'package:teno_mindmap/canvas/bloc/CanvasBloc.dart';
 import 'package:teno_mindmap/dashboard/bloc/DashboardState.dart';
+import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
 
 import 'dashboard/Dashboard.dart';
 
 class MindMap extends StatelessWidget {
+  static final localizationDelegate = AppLocalizations.delegate;
+
   const MindMap({super.key});
 
   @override

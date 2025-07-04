@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NodeMeta {
 
- String? get id; String get title;@OffsetJsonConverter() Offset get position;@SizeJsonConverter() Size get size; String get type; Map<String, dynamic> get data;
+ String? get id; String get title;@OffsetJsonConverter() Offset get position; bool get isPositionLocked;@SizeJsonConverter() Size get size; String get type; Map<String, dynamic> get data;
 /// Create a copy of NodeMeta
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $NodeMetaCopyWith<NodeMeta> get copyWith => _$NodeMetaCopyWithImpl<NodeMeta>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NodeMeta&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.position, position) || other.position == position)&&(identical(other.size, size) || other.size == size)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.data, data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NodeMeta&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.position, position) || other.position == position)&&(identical(other.isPositionLocked, isPositionLocked) || other.isPositionLocked == isPositionLocked)&&(identical(other.size, size) || other.size == size)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.data, data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,position,size,type,const DeepCollectionEquality().hash(data));
+int get hashCode => Object.hash(runtimeType,id,title,position,isPositionLocked,size,type,const DeepCollectionEquality().hash(data));
 
 @override
 String toString() {
-  return 'NodeMeta(id: $id, title: $title, position: $position, size: $size, type: $type, data: $data)';
+  return 'NodeMeta(id: $id, title: $title, position: $position, isPositionLocked: $isPositionLocked, size: $size, type: $type, data: $data)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $NodeMetaCopyWith<$Res>  {
   factory $NodeMetaCopyWith(NodeMeta value, $Res Function(NodeMeta) _then) = _$NodeMetaCopyWithImpl;
 @useResult
 $Res call({
- String? id, String title,@OffsetJsonConverter() Offset position,@SizeJsonConverter() Size size, String type, Map<String, dynamic> data
+ String? id, String title,@OffsetJsonConverter() Offset position, bool isPositionLocked,@SizeJsonConverter() Size size, String type, Map<String, dynamic> data
 });
 
 
@@ -66,12 +66,13 @@ class _$NodeMetaCopyWithImpl<$Res>
 
 /// Create a copy of NodeMeta
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? position = null,Object? size = null,Object? type = null,Object? data = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? position = null,Object? isPositionLocked = null,Object? size = null,Object? type = null,Object? data = null,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
-as Offset,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
+as Offset,isPositionLocked: null == isPositionLocked ? _self.isPositionLocked : isPositionLocked // ignore: cast_nullable_to_non_nullable
+as bool,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as Size,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,
@@ -84,13 +85,14 @@ as Map<String, dynamic>,
 /// @nodoc
 @JsonSerializable()
 
-class _NodeMeta implements NodeMeta {
-  const _NodeMeta({this.id, required this.title, @OffsetJsonConverter() this.position = Offset.zero, @SizeJsonConverter() this.size = Size.zero, this.type = 'default', final  Map<String, dynamic> data = const {}}): _data = data;
+class _NodeMeta extends NodeMeta {
+  const _NodeMeta({this.id, required this.title, @OffsetJsonConverter() this.position = Offset.zero, this.isPositionLocked = false, @SizeJsonConverter() this.size = Size.zero, this.type = 'default', final  Map<String, dynamic> data = const {}}): _data = data,super._();
   factory _NodeMeta.fromJson(Map<String, dynamic> json) => _$NodeMetaFromJson(json);
 
 @override final  String? id;
 @override final  String title;
 @override@JsonKey()@OffsetJsonConverter() final  Offset position;
+@override@JsonKey() final  bool isPositionLocked;
 @override@JsonKey()@SizeJsonConverter() final  Size size;
 @override@JsonKey() final  String type;
  final  Map<String, dynamic> _data;
@@ -114,16 +116,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NodeMeta&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.position, position) || other.position == position)&&(identical(other.size, size) || other.size == size)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other._data, _data));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NodeMeta&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.position, position) || other.position == position)&&(identical(other.isPositionLocked, isPositionLocked) || other.isPositionLocked == isPositionLocked)&&(identical(other.size, size) || other.size == size)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other._data, _data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,position,size,type,const DeepCollectionEquality().hash(_data));
+int get hashCode => Object.hash(runtimeType,id,title,position,isPositionLocked,size,type,const DeepCollectionEquality().hash(_data));
 
 @override
 String toString() {
-  return 'NodeMeta(id: $id, title: $title, position: $position, size: $size, type: $type, data: $data)';
+  return 'NodeMeta(id: $id, title: $title, position: $position, isPositionLocked: $isPositionLocked, size: $size, type: $type, data: $data)';
 }
 
 
@@ -134,7 +136,7 @@ abstract mixin class _$NodeMetaCopyWith<$Res> implements $NodeMetaCopyWith<$Res>
   factory _$NodeMetaCopyWith(_NodeMeta value, $Res Function(_NodeMeta) _then) = __$NodeMetaCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String title,@OffsetJsonConverter() Offset position,@SizeJsonConverter() Size size, String type, Map<String, dynamic> data
+ String? id, String title,@OffsetJsonConverter() Offset position, bool isPositionLocked,@SizeJsonConverter() Size size, String type, Map<String, dynamic> data
 });
 
 
@@ -151,12 +153,13 @@ class __$NodeMetaCopyWithImpl<$Res>
 
 /// Create a copy of NodeMeta
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? position = null,Object? size = null,Object? type = null,Object? data = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? position = null,Object? isPositionLocked = null,Object? size = null,Object? type = null,Object? data = null,}) {
   return _then(_NodeMeta(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
-as Offset,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
+as Offset,isPositionLocked: null == isPositionLocked ? _self.isPositionLocked : isPositionLocked // ignore: cast_nullable_to_non_nullable
+as bool,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as Size,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,data: null == data ? _self._data : data // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,

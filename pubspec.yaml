@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   flutter_bloc: ^9.1.1
   freezed_annotation: ^3.0.0
   json_annotation: ^4.9.0
@@ -31,6 +34,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  uses-material-design: true
+  generate: true
 
   # To add assets to your package, add an assets section, like this:
   # assets:
