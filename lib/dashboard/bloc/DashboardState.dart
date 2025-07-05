@@ -100,16 +100,13 @@ sealed class DashboardState with _$DashboardState {
     return nodeMetas[node.id]!;
   }
 
-  Node parentOf(Node node) {
-    if (node.isRoot) {
-      throw Exception(
-        'Root node has no parent. Please check for node.isRoot before calling this method.',
-      );
+  Node? parentOf(Node node) =>
+      node.parentId != null ? nodes[node.parentId] : null;
+
+  Node nodeOf(String nodeId) {
+    if (!nodes.containsKey(nodeId)) {
+      throw Exception('Node $nodeId does not exist!');
     }
-    final parent = nodes[node.parentId];
-    if (parent == null) {
-      throw Exception('Node has non-existence parent');
-    }
-    return parent;
+    return nodes[nodeId]!;
   }
 }

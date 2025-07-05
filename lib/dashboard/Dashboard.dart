@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_menu/star_menu.dart';
+import 'package:teno_mindmap/canvas/bloc/CanvasBloc.dart';
 import 'package:teno_mindmap/dashboard/widgets/IconTextButton.dart';
 import 'package:teno_mindmap/dashboard/widgets/NodeWrapper.dart';
 import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
@@ -17,14 +18,12 @@ import 'widgets/DefaultNodeRenderer.dart';
 class Dashboard extends StatefulWidget {
   const Dashboard({
     super.key,
-    required this.dashboardState,
     this.nodeRender,
     this.connectorRender,
     this.onNodeTap,
     this.onNodeSecondaryTap,
   });
 
-  final DashboardState dashboardState;
   final Widget Function(BuildContext context, Node node, NodeMeta meta)?
   nodeRender;
   final Widget Function(
@@ -56,30 +55,33 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(_centerCanvas);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final nodeRender = widget.nodeRender ?? _defaultNodeRenderer;
     final connectorRender = widget.connectorRender ?? _defaultConnectorRenderer;
     final onNodeTap = widget.onNodeTap ?? _defaultOnNodeTap;
     final onNodeSecondaryTap = widget.onNodeSecondaryTap ?? _defaultOnNodeTap;
 
-    return BlocProvider(
-      create: (_) => DashboardBloc(widget.dashboardState),
-      child: BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, state) {
-          return Stack(
-            children: [
-              for (final node in state.nodes.values)
-                NodeWrapper(
-                  node: node,
-                  nodeMeta: state.getNodeMeta(node),
-                  onNodeTap: onNodeTap,
-                  onNodeSecondaryTap: onNodeSecondaryTap,
-                  child: nodeRender(context, node, state.getNodeMeta(node)),
-                ),
-            ],
-          );
-        },
-      ),
+    return BlocBuilder<DashboardBloc, DashboardState>(
+      builder: (context, state) {
+        return Stack(
+          children: [
+            for (final node in state.nodes.values)
+              NodeWrapper(
+                node: node,
+                nodeMeta: state.getNodeMeta(node),
+                onNodeTap: onNodeTap,
+                onNodeSecondaryTap: onNodeSecondaryTap,
+                child: nodeRender(context, node, state.getNodeMeta(node)),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -131,13 +133,9 @@ class _DashboardState extends State<Dashboard> {
             icon: Icons.add,
             text: l10n.addChild,
             onPressed:
-                () => DashboardBloc.read(context).add(
-                  RequestAddChildNode(
-                    parentNode: node,
-                    parentNodeMeta: nodeMeta,
-                    parentSize: renderObject.size,
-                  ),
-                ),
+                () => DashboardBloc.read(
+                  context,
+                ).add(RequestAddChildNode(parentNodeId: node.id)),
           ),
           IconTextButton(icon: Icons.edit, text: l10n.edit, onPressed: () {}),
           if (!node.isRoot)
@@ -150,5 +148,13 @@ class _DashboardState extends State<Dashboard> {
         parentContext: context,
       ),
     );
+  }
+
+  void _centerCanvas(Duration timeStamp) {
+    final renderObject = context.findRenderObject() as RenderBox;
+    final size = renderObject.size;
+    CanvasBloc.read(
+      context,
+    ).add(CanvasPanned(panDelta: Offset(size.width / 2, size.height / 2)));
   }
 }

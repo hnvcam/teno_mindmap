@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:teno_debug/teno_debug.dart';
 import 'package:teno_mindmap/canvas/bloc/CanvasBloc.dart';
+import 'package:teno_mindmap/dashboard/bloc/DashboardBloc.dart';
 import 'package:teno_mindmap/teno_mindmap.dart';
 
 void main() {
-  debugBloc([CanvasBloc]);
+  debugBloc([CanvasBloc, DashboardBloc]);
+  debugLog(['DashboardBloc']);
 
   runApp(const MyApp());
 }

@@ -8,6 +8,7 @@ import 'package:teno_mindmap/dashboard/bloc/DashboardState.dart';
 import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
 
 import 'dashboard/Dashboard.dart';
+import 'dashboard/bloc/DashboardBloc.dart';
 
 class MindMap extends StatelessWidget {
   static final localizationDelegate = AppLocalizations.delegate;
@@ -20,16 +21,20 @@ class MindMap extends StatelessWidget {
       BrowserContextMenu.disableContextMenu();
     }
 
-    return BlocProvider(
-      create: (_) => CanvasBloc(),
-      child: ClipRect(
-        child: Stack(
-          children: [
-            Positioned.fill(child: GridCanvas()),
-            Positioned.fill(
-              child: Dashboard(dashboardState: DashboardState.empty),
-            ),
-          ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => CanvasBloc()),
+        BlocProvider(create: (_) => DashboardBloc(DashboardState.empty)),
+      ],
+      child: BlocProvider(
+        create: (_) => CanvasBloc(),
+        child: ClipRect(
+          child: Stack(
+            children: [
+              Positioned.fill(child: GridCanvas()),
+              Positioned.fill(child: Dashboard()),
+            ],
+          ),
         ),
       ),
     );

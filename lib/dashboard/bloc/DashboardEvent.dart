@@ -4,22 +4,21 @@ sealed class DashboardEvent {
   const DashboardEvent();
 }
 
-class RequestRebalancingNodes extends DashboardEvent {
-  const RequestRebalancingNodes({required this.node, this.forced = false});
+class RequestRebalancingNode extends DashboardEvent {
+  const RequestRebalancingNode({required this.nodeId, this.forced = false});
 
   /// force = true means we ignore the isPositionLocked flag of NodeMeta
   final bool forced;
-  final Node node;
+  final String nodeId;
 }
 
 class RequestAddChildNode extends DashboardEvent {
-  const RequestAddChildNode({
-    required this.parentNode,
-    required this.parentNodeMeta,
-    required this.parentSize,
-  });
+  const RequestAddChildNode({required this.parentNodeId});
+  final String parentNodeId;
+}
 
-  final Node parentNode;
-  final NodeMeta parentNodeMeta;
-  final Size parentSize;
+class NodeSizeChangedEvent extends DashboardEvent {
+  const NodeSizeChangedEvent(this.nodeId, this.size);
+  final String nodeId;
+  final Size size;
 }

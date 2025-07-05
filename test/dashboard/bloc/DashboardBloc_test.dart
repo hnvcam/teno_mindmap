@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,7 +9,50 @@ import 'package:teno_mindmap/models/Node.dart';
 import 'package:teno_mindmap/models/NodeMeta.dart';
 
 void main() {
-  group('DashboardBloc', () {
+  group('DashboardBloc - _getNodeAngularSpan', () {
+    test('Root node has span of full angle', () {
+      final bloc = DashboardBloc(
+        DashboardState.empty.copyWith(
+          nodes: {'root': Node(id: 'root')},
+          spacing: 50,
+        ),
+      );
+      expect(bloc.testNodeAngularSpan(Node(id: 'root')), (
+        start: 0,
+        end: 2 * pi,
+      ));
+    });
+
+    test('Fist child of root has span of 0 to pi', () {
+      final child = Node(id: 'child', parentId: 'root');
+      final bloc = DashboardBloc(
+        DashboardState.empty.copyWith(
+          nodes: {
+            'root': Node(id: 'root', children: [child]),
+            'child': child,
+          },
+        ),
+      );
+      expect(bloc.testNodeAngularSpan(child), (start: 0, end: pi));
+    });
+
+    test('Second child of root has span of pi to 2pi', () {
+      final children = [
+        for (int i = 1; i <= 2; i++) Node(id: 'child$i', parentId: 'root'),
+      ];
+      final bloc = DashboardBloc(
+        DashboardState.empty.copyWith(
+          nodes: {
+            'root': Node(id: 'root', children: children),
+            for (final child in children) child.id: child,
+          },
+        ),
+      );
+      expect(bloc.testNodeAngularSpan(children[1]), (start: pi, end: 2 * pi));
+    });
+  });
+
+  group('DashboardBloc - Rebalancing', () {
     late DashboardBloc bloc;
     late Node root;
 
@@ -55,7 +100,7 @@ void main() {
           ),
         );
       },
-      act: (bloc) => bloc.add(RequestRebalancingNodes(node: root)),
+      act: (bloc) => bloc.add(RequestRebalancingNode(nodeId: root.id)),
       expect:
           () => [
             isA<DashboardState>().having(
@@ -99,7 +144,8 @@ void main() {
         );
       },
       act:
-          (bloc) => bloc.add(RequestRebalancingNodes(node: root, forced: true)),
+          (bloc) =>
+              bloc.add(RequestRebalancingNode(nodeId: root.id, forced: true)),
       expect:
           () => [
             isA<DashboardState>().having(
