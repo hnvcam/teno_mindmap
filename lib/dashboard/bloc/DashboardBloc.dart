@@ -21,7 +21,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<RequestAddChildNode>(_onRequestAddChildNode);
     on<RequestRebalancingNode>(_onRequestRebalancingNodes);
     on<NodeSizeChangedEvent>(_onNodeSizeChanged);
-    on<RequestFixNodePosition>(_onRequestFixNodePosition);
+    on<RequestFixNodeCenter>(_onRequestFixNodePosition);
   }
 
   FutureOr<void> _onRequestAddChildNode(
@@ -49,7 +49,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         node: node,
         startAngle: span.start,
         endAngle: span.end,
-        centerOverride: null,
         forced: event.forced,
       ),
     );
@@ -59,6 +58,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ({double start, double end}) testNodeAngularSpan(Node node) =>
       _getNodeAngularSpan(node);
 
+  double _getAngleStep(double start, double end, int childrenCount) =>
+      (end - start) / max(2, childrenCount);
+
   ({double start, double end}) _getNodeAngularSpan(Node node) {
     List<Node> ancestors = [node];
     Node? parent = state.parentOf(node);
@@ -66,8 +68,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       ancestors.insert(0, parent);
       parent = state.parentOf(parent);
     }
-    double startAngle = 0;
-    double endAngle = 2 * pi;
+    double startAngle = state.radialAngleStart;
+    double endAngle = state.radialAngleStart + 2 * pi;
     for (int i = 0; i < ancestors.length - 1; i++) {
       final ancestor = ancestors[i];
       if (ancestor.children.isEmpty) {
@@ -75,8 +77,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           'Invalid structure! Ancestor ${ancestor.id} has no children',
         );
       }
-      final steppedAngle =
-          (endAngle - startAngle) / max(2, ancestor.children.length);
+      final steppedAngle = _getAngleStep(
+        startAngle,
+        endAngle,
+        ancestor.children.length,
+      );
       final nextAncestorIndex = ancestor.children.indexOf(ancestors[i + 1]);
       startAngle += steppedAngle * nextAncestorIndex;
       endAngle = startAngle + steppedAngle;
@@ -87,24 +92,18 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardState _layoutRadialRecursive({
     required DashboardState currentState,
     required Node node,
-    required Offset? centerOverride,
     required double startAngle,
     required double endAngle,
     bool forced = false,
   }) {
     final nodeMeta = currentState.getNodeMeta(node);
-    final spacing = currentState.spacing;
-    final center = centerOverride ?? nodeMeta.center;
     final children = node.children;
     if (children.isEmpty) return currentState;
 
-    final totalSiblings = children.length;
-    if (totalSiblings == 0) return currentState;
-
-    final angleStep = (endAngle - startAngle) / totalSiblings;
+    final angleStep = _getAngleStep(startAngle, endAngle, children.length);
     double childStartAngle = startAngle;
 
-    final radiusToChildren = nodeMeta.radius + spacing;
+    final radiusToChildren = nodeMeta.radius + currentState.spacing;
 
     DashboardState updatedState = currentState;
     for (final child in children) {
@@ -113,21 +112,18 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       if (forced || !childMeta.isPositionLocked) {
         final midAngle = (childStartAngle + childEndAngle) / 2;
-        final childPosition =
-            Offset(
-              center.dx + radiusToChildren * cos(midAngle),
-              center.dy + radiusToChildren * sin(midAngle),
-            ) -
-            Offset(childMeta.size.width / 2, childMeta.size.height / 2);
+        final childCenter = Offset(
+          nodeMeta.center.dx + radiusToChildren * cos(midAngle),
+          nodeMeta.center.dy + radiusToChildren * sin(midAngle),
+        );
 
-        final updatedChildMeta = childMeta.copyWith(position: childPosition);
+        final updatedChildMeta = childMeta.copyWith(center: childCenter);
 
         updatedState = updatedState.updateNode(child.id, updatedChildMeta);
 
         updatedState = _layoutRadialRecursive(
           currentState: updatedState,
           node: child,
-          centerOverride: updatedChildMeta.center,
           startAngle: childStartAngle,
           endAngle: childEndAngle,
           forced: forced,
@@ -158,7 +154,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   FutureOr<void> _onRequestFixNodePosition(
-    RequestFixNodePosition event,
+    RequestFixNodeCenter event,
     Emitter<DashboardState> emit,
   ) {
     emit(
@@ -166,7 +162,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         event.nodeId,
         state
             .getNodeMetaById(event.nodeId)
-            .copyWith(position: event.position, isPositionLocked: true),
+            .copyWith(center: event.center, isPositionLocked: true),
       ),
     );
   }

@@ -23,6 +23,8 @@ _DashboardState _$DashboardStateFromJson(Map<String, dynamic> json) =>
               ? null
               : Node.fromJson(json['root'] as Map<String, dynamic>),
       spacing: (json['spacing'] as num?)?.toDouble() ?? 50.0,
+      radialAngleStart:
+          (json['radialAngleStart'] as num?)?.toDouble() ?? -pi / 2,
     );
 
 Map<String, dynamic> _$DashboardStateToJson(_DashboardState instance) =>
@@ -31,4 +33,5 @@ Map<String, dynamic> _$DashboardStateToJson(_DashboardState instance) =>
       'nodeMetas': instance.nodeMetas,
       'root': instance.root,
       'spacing': instance.spacing,
+      'radialAngleStart': instance.radialAngleStart,
     };

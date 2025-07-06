@@ -9,11 +9,11 @@ part of '../NodeMeta.dart';
 _NodeMeta _$NodeMetaFromJson(Map<String, dynamic> json) => _NodeMeta(
   id: json['id'] as String?,
   title: json['title'] as String,
-  position:
-      json['position'] == null
+  center:
+      json['center'] == null
           ? Offset.zero
           : const OffsetJsonConverter().fromJson(
-            json['position'] as Map<String, double>,
+            json['center'] as Map<String, double>,
           ),
   isPositionLocked: json['isPositionLocked'] as bool? ?? false,
   size:
@@ -29,7 +29,7 @@ _NodeMeta _$NodeMetaFromJson(Map<String, dynamic> json) => _NodeMeta(
 Map<String, dynamic> _$NodeMetaToJson(_NodeMeta instance) => <String, dynamic>{
   'id': instance.id,
   'title': instance.title,
-  'position': const OffsetJsonConverter().toJson(instance.position),
+  'center': const OffsetJsonConverter().toJson(instance.center),
   'isPositionLocked': instance.isPositionLocked,
   'size': const SizeJsonConverter().toJson(instance.size),
   'type': instance.type,

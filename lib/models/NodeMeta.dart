@@ -15,7 +15,7 @@ sealed class NodeMeta with _$NodeMeta {
   const factory NodeMeta({
     String? id,
     required String title,
-    @OffsetJsonConverter() @Default(Offset.zero) Offset position,
+    @OffsetJsonConverter() @Default(Offset.zero) Offset center,
     @Default(false) bool isPositionLocked,
     @SizeJsonConverter() @Default(Size.zero) Size size,
     @Default('default') String type,
@@ -25,8 +25,5 @@ sealed class NodeMeta with _$NodeMeta {
   factory NodeMeta.fromJson(Map<String, dynamic> json) =>
       _$NodeMetaFromJson(json);
 
-  double get radius =>
-      sqrt(size.width * size.width + size.height * size.height) / 2;
-
-  Offset get center => (position & size).center;
+  double get radius => max(size.width, size.height) / 2;
 }

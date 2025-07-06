@@ -13,7 +13,9 @@ import 'dashboard/bloc/DashboardBloc.dart';
 class MindMap extends StatelessWidget {
   static final localizationDelegate = AppLocalizations.delegate;
 
-  const MindMap({super.key});
+  const MindMap({super.key, required this.title});
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,10 @@ class MindMap extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CanvasBloc()),
-        BlocProvider(create: (_) => DashboardBloc(DashboardState.empty)),
+        BlocProvider(
+          create:
+              (_) => DashboardBloc(DashboardState.empty.newRoot(title: title)),
+        ),
       ],
       child: BlocProvider(
         create: (_) => CanvasBloc(),

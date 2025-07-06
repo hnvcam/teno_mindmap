@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Mind Map Canvas')),
-      body: const MindMap(),
+      body: const MindMap(title: 'Your Goal'),
     );
   }
 }

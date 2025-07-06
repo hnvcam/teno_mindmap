@@ -23,8 +23,8 @@ class NodeSizeChangedEvent extends DashboardEvent {
   final Size size;
 }
 
-class RequestFixNodePosition extends DashboardEvent {
-  const RequestFixNodePosition({required this.nodeId, required this.position});
+class RequestFixNodeCenter extends DashboardEvent {
+  const RequestFixNodeCenter({required this.nodeId, required this.center});
   final String nodeId;
-  final Offset position;
+  final Offset center;
 }

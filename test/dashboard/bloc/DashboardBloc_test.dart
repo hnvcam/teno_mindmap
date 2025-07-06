@@ -10,24 +10,26 @@ import 'package:teno_mindmap/models/Node.dart';
 import '../../testUtils.dart';
 
 void main() {
-  late DashboardState rootState;
-  setUp(() {
-    rootState = DashboardState.empty.newRoot('root', 'root');
-  });
-
   test('initial state is correct', () {
     final emptyStateBloc = DashboardBloc(DashboardState.empty);
     expect(emptyStateBloc.state.nodes, hasLength(0));
     expect(emptyStateBloc.state.nodeMetas, hasLength(0));
     emptyStateBloc.close();
 
-    final rootStateBloc = DashboardBloc(rootState);
+    final rootStateBloc = DashboardBloc(DashboardState.empty.newRoot());
     expect(rootStateBloc.state.nodes, hasLength(1));
     expect(rootStateBloc.state.nodeMetas, hasLength(1));
     rootStateBloc.close();
   });
 
   group('DashboardBloc - _getNodeAngularSpan', () {
+    late DashboardState rootState;
+    setUp(() {
+      rootState = DashboardState.empty
+          .newRoot(id: 'root')
+          .withRadialAngleStart(0);
+    });
+
     test('Root node has span of full angle', () {
       final bloc = DashboardBloc(rootState);
       expect(bloc.testNodeAngularSpan(Node(id: 'root')), (
@@ -76,6 +78,12 @@ void main() {
   group('DashboardBloc - Rebalancing', () {
     late DashboardState testState;
     late List<Node> testChildren;
+    late DashboardState rootState;
+
+    setUp(() {
+      rootState = DashboardState.empty.newRoot(id: 'root');
+    });
+
     blocTest<DashboardBloc, DashboardState>(
       'rebalances unlocked nodes when RequestRebalancingNodes is added',
       setUp: () {
@@ -90,11 +98,8 @@ void main() {
         bloc.add(RequestRebalancingNode(nodeId: 'root'));
       },
       verify: (bloc) {
-        expect(bloc.state.getNodeMeta(bloc.state.root!).position, Offset.zero);
-        expect(
-          bloc.state.getNodeMeta(testChildren[0]).position,
-          isNot(Offset.zero),
-        );
+        expect(bloc.state.getNodeMeta(bloc.state.root!).center, Offset.zero);
+        expect(bloc.state.getNodeMeta(testChildren[0]).center, Offset(100, 0));
       },
     );
 
@@ -110,16 +115,13 @@ void main() {
         bloc.add(NodeSizeChangedEvent('root', Size(100, 50)));
         bloc.add(NodeSizeChangedEvent(testChildren[0].id, Size(80, 20)));
         bloc.add(
-          RequestFixNodePosition(
-            nodeId: testChildren[0].id,
-            position: Offset.zero,
-          ),
+          RequestFixNodeCenter(nodeId: testChildren[0].id, center: Offset.zero),
         );
         bloc.add(RequestRebalancingNode(nodeId: 'root'));
       },
       verify: (bloc) {
-        expect(bloc.state.getNodeMeta(bloc.state.root!).position, Offset.zero);
-        expect(bloc.state.getNodeMeta(testChildren[0]).position, Offset.zero);
+        expect(bloc.state.getNodeMeta(bloc.state.root!).center, Offset.zero);
+        expect(bloc.state.getNodeMeta(testChildren[0]).center, Offset.zero);
       },
     );
   });

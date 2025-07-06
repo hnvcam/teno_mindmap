@@ -57,7 +57,13 @@ class _NodeWrapperState extends State<NodeWrapper> {
           (prev, curr) =>
               prev.scale != curr.scale || prev.offset != curr.offset,
       builder: (context, state) {
-        final scaledPosition = widget.nodeMeta.position * state.scale;
+        final scaledPosition =
+            (widget.nodeMeta.center -
+                Offset(
+                  widget.nodeMeta.size.width / 2,
+                  widget.nodeMeta.size.height / 2,
+                )) *
+            state.scale;
         var tapLocation = Offset.zero;
         var secondaryTapLocation = Offset.zero;
         return NotificationListener<SizeChangedLayoutNotification>(

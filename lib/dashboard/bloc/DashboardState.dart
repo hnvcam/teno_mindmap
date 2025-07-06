@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,6 +21,7 @@ sealed class DashboardState with _$DashboardState {
     @Default({}) Map<String, NodeMeta> nodeMetas,
     Node? root,
     @Default(50.0) double spacing,
+    @Default(-pi / 2) double radialAngleStart,
   }) = _DashboardState;
 
   factory DashboardState.fromJson(Map<String, dynamic> json) =>
@@ -29,6 +32,7 @@ sealed class DashboardState with _$DashboardState {
     Map<String, Node>? nodes,
     Map<String, NodeMeta>? nodeMetas,
     double? spacing,
+    double? radialAngleStart,
   }) {
     final effectiveNodes = nodes ?? this.nodes;
     return DashboardState(
@@ -41,10 +45,11 @@ sealed class DashboardState with _$DashboardState {
                   .where((element) => element.isRoot)
                   .firstOrNull,
       spacing: spacing ?? this.spacing,
+      radialAngleStart: radialAngleStart ?? this.radialAngleStart,
     );
   }
 
-  DashboardState newRoot([String? id, String? title]) {
+  DashboardState newRoot({String? id, String? title}) {
     if (root != null) {
       throw Exception('Root already exists');
     }
@@ -150,4 +155,7 @@ sealed class DashboardState with _$DashboardState {
 
     return newNodes;
   }
+
+  DashboardState withRadialAngleStart(double angle) =>
+      _copyWith(radialAngleStart: angle);
 }
