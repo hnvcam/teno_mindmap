@@ -17,11 +17,6 @@ T _$identity<T>(T value) => value;
 mixin _$DashboardState {
 
  Map<String, Node> get nodes; Map<String, NodeMeta> get nodeMetas; Node? get root; double get spacing;
-/// Create a copy of DashboardState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$DashboardStateCopyWith<DashboardState> get copyWith => _$DashboardStateCopyWithImpl<DashboardState>(this as DashboardState, _$identity);
 
   /// Serializes this DashboardState to a JSON map.
   Map<String, dynamic> toJson();
@@ -44,51 +39,7 @@ String toString() {
 
 }
 
-/// @nodoc
-abstract mixin class $DashboardStateCopyWith<$Res>  {
-  factory $DashboardStateCopyWith(DashboardState value, $Res Function(DashboardState) _then) = _$DashboardStateCopyWithImpl;
-@useResult
-$Res call({
- Map<String, Node> nodes, Map<String, NodeMeta> nodeMetas, Node? root, double spacing
-});
 
-
-$NodeCopyWith<$Res>? get root;
-
-}
-/// @nodoc
-class _$DashboardStateCopyWithImpl<$Res>
-    implements $DashboardStateCopyWith<$Res> {
-  _$DashboardStateCopyWithImpl(this._self, this._then);
-
-  final DashboardState _self;
-  final $Res Function(DashboardState) _then;
-
-/// Create a copy of DashboardState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? nodes = null,Object? nodeMetas = null,Object? root = freezed,Object? spacing = null,}) {
-  return _then(_self.copyWith(
-nodes: null == nodes ? _self.nodes : nodes // ignore: cast_nullable_to_non_nullable
-as Map<String, Node>,nodeMetas: null == nodeMetas ? _self.nodeMetas : nodeMetas // ignore: cast_nullable_to_non_nullable
-as Map<String, NodeMeta>,root: freezed == root ? _self.root : root // ignore: cast_nullable_to_non_nullable
-as Node?,spacing: null == spacing ? _self.spacing : spacing // ignore: cast_nullable_to_non_nullable
-as double,
-  ));
-}
-/// Create a copy of DashboardState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NodeCopyWith<$Res>? get root {
-    if (_self.root == null) {
-    return null;
-  }
-
-  return $NodeCopyWith<$Res>(_self.root!, (value) {
-    return _then(_self.copyWith(root: value));
-  });
-}
-}
 
 
 /// @nodoc
@@ -115,11 +66,6 @@ class _DashboardState extends DashboardState {
 @override final  Node? root;
 @override@JsonKey() final  double spacing;
 
-/// Create a copy of DashboardState
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$DashboardStateCopyWith<_DashboardState> get copyWith => __$DashboardStateCopyWithImpl<_DashboardState>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
@@ -143,51 +89,7 @@ String toString() {
 
 }
 
-/// @nodoc
-abstract mixin class _$DashboardStateCopyWith<$Res> implements $DashboardStateCopyWith<$Res> {
-  factory _$DashboardStateCopyWith(_DashboardState value, $Res Function(_DashboardState) _then) = __$DashboardStateCopyWithImpl;
-@override @useResult
-$Res call({
- Map<String, Node> nodes, Map<String, NodeMeta> nodeMetas, Node? root, double spacing
-});
 
 
-@override $NodeCopyWith<$Res>? get root;
-
-}
-/// @nodoc
-class __$DashboardStateCopyWithImpl<$Res>
-    implements _$DashboardStateCopyWith<$Res> {
-  __$DashboardStateCopyWithImpl(this._self, this._then);
-
-  final _DashboardState _self;
-  final $Res Function(_DashboardState) _then;
-
-/// Create a copy of DashboardState
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? nodes = null,Object? nodeMetas = null,Object? root = freezed,Object? spacing = null,}) {
-  return _then(_DashboardState(
-nodes: null == nodes ? _self._nodes : nodes // ignore: cast_nullable_to_non_nullable
-as Map<String, Node>,nodeMetas: null == nodeMetas ? _self._nodeMetas : nodeMetas // ignore: cast_nullable_to_non_nullable
-as Map<String, NodeMeta>,root: freezed == root ? _self.root : root // ignore: cast_nullable_to_non_nullable
-as Node?,spacing: null == spacing ? _self.spacing : spacing // ignore: cast_nullable_to_non_nullable
-as double,
-  ));
-}
-
-/// Create a copy of DashboardState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NodeCopyWith<$Res>? get root {
-    if (_self.root == null) {
-    return null;
-  }
-
-  return $NodeCopyWith<$Res>(_self.root!, (value) {
-    return _then(_self.copyWith(root: value));
-  });
-}
-}
 
 // dart format on

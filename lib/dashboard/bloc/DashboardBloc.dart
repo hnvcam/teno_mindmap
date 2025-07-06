@@ -21,6 +21,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<RequestAddChildNode>(_onRequestAddChildNode);
     on<RequestRebalancingNode>(_onRequestRebalancingNodes);
     on<NodeSizeChangedEvent>(_onNodeSizeChanged);
+    on<RequestFixNodePosition>(_onRequestFixNodePosition);
   }
 
   FutureOr<void> _onRequestAddChildNode(
@@ -75,7 +76,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         );
       }
       final steppedAngle =
-          (endAngle - startAngle) / max((i + 1) * 2, ancestor.children.length);
+          (endAngle - startAngle) / max(2, ancestor.children.length);
       final nextAncestorIndex = ancestor.children.indexOf(ancestors[i + 1]);
       startAngle += steppedAngle * nextAncestorIndex;
       endAngle = startAngle + steppedAngle;
@@ -91,29 +92,26 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     required double endAngle,
     bool forced = false,
   }) {
-    final nodeMeta = currentState.nodeMetas[node.id];
-    if (nodeMeta == null) return currentState;
-
-    final newMetas = Map<String, NodeMeta>.from(currentState.nodeMetas);
+    final nodeMeta = currentState.getNodeMeta(node);
     final spacing = currentState.spacing;
-
     final center = centerOverride ?? nodeMeta.center;
     final children = node.children;
-    if (children.isEmpty) return currentState.copyWith(nodeMetas: newMetas);
+    if (children.isEmpty) return currentState;
 
     final totalSiblings = children.length;
-    if (totalSiblings == 0) return currentState.copyWith(nodeMetas: newMetas);
+    if (totalSiblings == 0) return currentState;
 
     final angleStep = (endAngle - startAngle) / totalSiblings;
     double childStartAngle = startAngle;
 
     final radiusToChildren = nodeMeta.radius + spacing;
 
+    DashboardState updatedState = currentState;
     for (final child in children) {
-      final childMeta = newMetas[child.id];
+      final childMeta = updatedState.getNodeMeta(child);
       final childEndAngle = childStartAngle + angleStep;
 
-      if (childMeta != null && (forced || !childMeta.isPositionLocked)) {
+      if (forced || !childMeta.isPositionLocked) {
         final midAngle = (childStartAngle + childEndAngle) / 2;
         final childPosition =
             Offset(
@@ -123,10 +121,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             Offset(childMeta.size.width / 2, childMeta.size.height / 2);
 
         final updatedChildMeta = childMeta.copyWith(position: childPosition);
-        newMetas[child.id] = updatedChildMeta;
 
-        final updatedState = currentState.copyWith(nodeMetas: newMetas);
-        final result = _layoutRadialRecursive(
+        updatedState = updatedState.updateNode(child.id, updatedChildMeta);
+
+        updatedState = _layoutRadialRecursive(
           currentState: updatedState,
           node: child,
           centerOverride: updatedChildMeta.center,
@@ -134,14 +132,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           endAngle: childEndAngle,
           forced: forced,
         );
-
-        newMetas.addAll(result.nodeMetas);
       }
 
       childStartAngle = childEndAngle;
     }
 
-    return currentState.copyWith(nodeMetas: newMetas);
+    return updatedState;
   }
 
   FutureOr<void> _onNodeSizeChanged(
@@ -153,13 +149,25 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       return null;
     }
     emit(
-      state.copyWith(
-        nodeMetas: Map.of(state.nodeMetas)
-          ..[event.nodeId] = state.nodeMetas[event.nodeId]!.copyWith(
-            size: event.size,
-          ),
+      state.updateNode(
+        event.nodeId,
+        state.getNodeMetaById(event.nodeId).copyWith(size: event.size),
       ),
     );
     _log.info('Node ${event.nodeId} updated size: ${event.size}');
+  }
+
+  FutureOr<void> _onRequestFixNodePosition(
+    RequestFixNodePosition event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(
+      state.updateNode(
+        event.nodeId,
+        state
+            .getNodeMetaById(event.nodeId)
+            .copyWith(position: event.position, isPositionLocked: true),
+      ),
+    );
   }
 }
