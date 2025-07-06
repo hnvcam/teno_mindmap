@@ -6,7 +6,7 @@ import 'package:teno_mindmap/teno_mindmap.dart';
 
 void main() {
   debugBloc([CanvasBloc, DashboardBloc]);
-  debugLog(['DashboardBloc']);
+  debugLog(['DashboardBloc', 'LayoutService']);
 
   runApp(const MyApp());
 }

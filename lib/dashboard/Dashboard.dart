@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_menu/star_menu.dart';
 import 'package:teno_mindmap/canvas/bloc/CanvasBloc.dart';
+import 'package:teno_mindmap/dashboard/widgets/ConnectorWrapper.dart';
 import 'package:teno_mindmap/dashboard/widgets/IconTextButton.dart';
 import 'package:teno_mindmap/dashboard/widgets/NodeWrapper.dart';
 import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
 import 'package:teno_mindmap/models/NodeMeta.dart';
 
+import '../canvas/bloc/CanvasState.dart';
 import '../models/Node.dart';
 import 'bloc/DashboardBloc.dart';
 import 'bloc/DashboardState.dart';
@@ -27,12 +29,12 @@ class Dashboard extends StatefulWidget {
   final Widget Function(BuildContext context, Node node, NodeMeta meta)?
   nodeRender;
   final Widget Function(
-    BuildContext context,
-    Node parent,
-    Node child,
-    NodeMeta parentMeta,
-    NodeMeta childMeta,
-  )?
+    BuildContext context, {
+    required Node node,
+    required Node parentNode,
+    required NodeMeta parentMeta,
+    required NodeMeta nodeMeta,
+  })?
   connectorRender;
   final void Function(
     BuildContext context, {
@@ -67,19 +69,47 @@ class _DashboardState extends State<Dashboard> {
     final onNodeTap = widget.onNodeTap ?? _defaultOnNodeTap;
     final onNodeSecondaryTap = widget.onNodeSecondaryTap ?? _defaultOnNodeTap;
 
-    return BlocBuilder<DashboardBloc, DashboardState>(
+    return BlocBuilder<CanvasBloc, CanvasState>(
       builder: (context, state) {
-        return Stack(
-          children: [
-            for (final node in state.nodes.values)
-              NodeWrapper(
-                node: node,
-                nodeMeta: state.getNodeMeta(node),
-                onNodeTap: onNodeTap,
-                onNodeSecondaryTap: onNodeSecondaryTap,
-                child: nodeRender(context, node, state.getNodeMeta(node)),
-              ),
-          ],
+        return BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) {
+            final List<Widget> connectors = [];
+            for (final node in state.nodes.values) {
+              if (node.isRoot) {
+                continue;
+              }
+              final nodeMeta = state.getNodeMeta(node);
+              final parentMeta = state.getNodeMetaById(node.parentId!);
+              connectors.add(
+                ConnectorWrapper(
+                  from: parentMeta.center,
+                  to: nodeMeta.center,
+                  child: connectorRender(
+                    context,
+                    node: node,
+                    parentNode: state.parentOf(node)!,
+                    nodeMeta: nodeMeta,
+                    parentMeta: parentMeta,
+                  ),
+                ),
+              );
+            }
+
+            return Stack(
+              children: [
+                ...connectors,
+                for (final node in state.nodes.values)
+                  NodeWrapper(
+                    key: ValueKey(node.id),
+                    node: node,
+                    nodeMeta: state.getNodeMeta(node),
+                    onNodeTap: onNodeTap,
+                    onNodeSecondaryTap: onNodeSecondaryTap,
+                    child: nodeRender(context, node, state.getNodeMeta(node)),
+                  ),
+              ],
+            );
+          },
         );
       },
     );
@@ -92,16 +122,16 @@ class _DashboardState extends State<Dashboard> {
   ) => DefaultNodeRenderer(node: node, nodeMeta: nodeMeta);
 
   Widget _defaultConnectorRenderer(
-    BuildContext context,
-    Node parent,
-    Node child,
-    NodeMeta parentMeta,
-    NodeMeta childMeta,
-  ) => DefaultConnectorRenderer(
-    parent: parent,
-    node: child,
+    BuildContext context, {
+    required Node node,
+    required Node parentNode,
+    required NodeMeta parentMeta,
+    required NodeMeta nodeMeta,
+  }) => DefaultConnectorRenderer(
+    parent: parentNode,
+    node: node,
     parentMeta: parentMeta,
-    nodeMeta: childMeta,
+    nodeMeta: nodeMeta,
   );
 
   void _defaultOnNodeTap(

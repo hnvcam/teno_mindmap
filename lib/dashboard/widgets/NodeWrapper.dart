@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teno_mindmap/canvas/bloc/CanvasBloc.dart';
-import 'package:teno_mindmap/canvas/bloc/CanvasState.dart';
 import 'package:teno_mindmap/dashboard/bloc/DashboardBloc.dart';
 
 import '../../models/Node.dart';
@@ -52,56 +50,50 @@ class _NodeWrapperState extends State<NodeWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CanvasBloc, CanvasState>(
-      buildWhen:
-          (prev, curr) =>
-              prev.scale != curr.scale || prev.offset != curr.offset,
-      builder: (context, state) {
-        final scaledPosition =
-            (widget.nodeMeta.center -
-                Offset(
-                  widget.nodeMeta.size.width / 2,
-                  widget.nodeMeta.size.height / 2,
-                )) *
-            state.scale;
-        var tapLocation = Offset.zero;
-        var secondaryTapLocation = Offset.zero;
-        return NotificationListener<SizeChangedLayoutNotification>(
-          onNotification: _onSizeChanged,
-          child: Positioned(
-            left: state.renderOffset.dx + scaledPosition.dx,
-            top: state.renderOffset.dy + scaledPosition.dy,
-            child: Transform.scale(
-              alignment: Alignment.topLeft,
-              scale: state.scale,
-              // we need context here for the context menu
-              child: GestureDetector(
-                onTapDown: (details) => tapLocation = details.globalPosition,
-                onSecondaryTapDown:
-                    (details) => secondaryTapLocation = details.globalPosition,
-                onTap:
-                    () => widget.onNodeTap(
-                      context,
-                      node: widget.node,
-                      nodeMeta: widget.nodeMeta,
-                      tapLocation: tapLocation,
-                    ),
-                onSecondaryTap:
-                    () => widget.onNodeSecondaryTap(
-                      context,
-                      node: widget.node,
-                      nodeMeta: widget.nodeMeta,
-                      tapLocation: secondaryTapLocation,
-                    ),
-                child: SizeChangedLayoutNotifier(
-                  key: _wrapperKey,
-                  child: widget.child,
+    final canvasState = CanvasBloc.read(context).state;
+    final scaledPosition =
+        widget.nodeMeta.center * canvasState.scale -
+        Offset(
+              widget.nodeMeta.size.width / 2,
+              widget.nodeMeta.size.height / 2,
+            ) *
+            canvasState.scale;
+    var tapLocation = Offset.zero;
+    var secondaryTapLocation = Offset.zero;
+    return NotificationListener<SizeChangedLayoutNotification>(
+      onNotification: _onSizeChanged,
+      child: Positioned(
+        left: canvasState.renderOffset.dx + scaledPosition.dx,
+        top: canvasState.renderOffset.dy + scaledPosition.dy,
+        child: Transform.scale(
+          alignment: Alignment.topLeft,
+          scale: canvasState.scale,
+          // we need context here for the context menu
+          child: GestureDetector(
+            onTapDown: (details) => tapLocation = details.globalPosition,
+            onSecondaryTapDown:
+                (details) => secondaryTapLocation = details.globalPosition,
+            onTap:
+                () => widget.onNodeTap(
+                  context,
+                  node: widget.node,
+                  nodeMeta: widget.nodeMeta,
+                  tapLocation: tapLocation,
                 ),
-              ),
+            onSecondaryTap:
+                () => widget.onNodeSecondaryTap(
+                  context,
+                  node: widget.node,
+                  nodeMeta: widget.nodeMeta,
+                  tapLocation: secondaryTapLocation,
+                ),
+            child: SizeChangedLayoutNotifier(
+              key: _wrapperKey,
+              child: widget.child,
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 

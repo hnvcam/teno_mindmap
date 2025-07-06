@@ -29,3 +29,9 @@ class RequestFixNodeCenter extends DashboardEvent {
   final String nodeId;
   final Offset center;
 }
+
+class RequestUpdateNodeCenter extends DashboardEvent {
+  const RequestUpdateNodeCenter({required this.nodeId, required this.center});
+  final String nodeId;
+  final Offset center;
+}

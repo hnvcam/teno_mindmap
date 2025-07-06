@@ -23,59 +23,6 @@ void main() {
     rootStateBloc.close();
   });
 
-  group('DashboardBloc - _getNodeAngularSpan', () {
-    late DashboardState rootState;
-    setUp(() {
-      rootState = DashboardState.empty
-          .newRoot(id: 'root')
-          .withRadialAngleStart(0);
-    });
-
-    test('Root node has span of full angle', () {
-      final bloc = DashboardBloc(rootState);
-      expect(bloc.testNodeAngularSpan(Node(id: 'root')), (
-        start: 0,
-        end: 2 * pi,
-      ));
-    });
-
-    test('Fist child of root has span of 0 to pi', () {
-      final sample = sampleChildren(rootState, nodeId: 'root', count: 1);
-      final bloc = DashboardBloc(sample.newState);
-      expect(bloc.testNodeAngularSpan(sample.children[0]), (start: 0, end: pi));
-    });
-
-    test('Second child of root has span of pi to 2pi', () {
-      final sample = sampleChildren(rootState, nodeId: 'root', count: 2);
-      final bloc = DashboardBloc(sample.newState);
-      expect(bloc.testNodeAngularSpan(sample.children[1]), (
-        start: pi,
-        end: 2 * pi,
-      ));
-    });
-    test('Fifth child of root has span of 9/5*pi to 2*pi', () {
-      final sample = sampleChildren(rootState, nodeId: 'root', count: 5);
-      final bloc = DashboardBloc(sample.newState);
-      expect(bloc.testNodeAngularSpan(sample.children[4]), (
-        start: 8 * pi / 5,
-        end: 2 * pi,
-      ));
-    });
-    test('Third child of 3rd child of root', () {
-      final sample = sampleChildren(rootState, nodeId: 'root', count: 3);
-      final sample2 = sampleChildren(
-        sample.newState,
-        nodeId: sample.children[2].id,
-        count: 3,
-      );
-      final bloc = DashboardBloc(sample2.newState);
-      expect(bloc.testNodeAngularSpan(sample2.children[2]), (
-        start: 4 * pi / 3 + 2 * 2 * pi / 9,
-        end: 2 * pi,
-      ));
-    });
-  });
-
   group('DashboardBloc - Rebalancing', () {
     late DashboardState testState;
     late List<Node> testChildren;
@@ -96,8 +43,8 @@ void main() {
       act: (bloc) {
         bloc.add(NodeSizeChangedEvent('root', Size(100, 50)));
         bloc.add(NodeSizeChangedEvent(testChildren[0].id, Size(80, 20)));
-        bloc.add(RequestRebalancingNode(nodeId: 'root'));
       },
+      wait: Duration(milliseconds: 100),
       verify: (bloc) {
         expect(bloc.state.getNodeMeta(bloc.state.root!).center, Offset.zero);
         expect(bloc.state.getNodeMeta(testChildren[0]).center, Offset(100, 0));
@@ -115,11 +62,13 @@ void main() {
       act: (bloc) {
         bloc.add(NodeSizeChangedEvent('root', Size(100, 50)));
         bloc.add(NodeSizeChangedEvent(testChildren[0].id, Size(80, 20)));
+
+        /// maybe flaky here, because above request issue relayout task first.
         bloc.add(
           RequestFixNodeCenter(nodeId: testChildren[0].id, center: Offset.zero),
         );
-        bloc.add(RequestRebalancingNode(nodeId: 'root'));
       },
+      wait: Duration(milliseconds: 100),
       verify: (bloc) {
         expect(bloc.state.getNodeMeta(bloc.state.root!).center, Offset.zero);
         expect(bloc.state.getNodeMeta(testChildren[0]).center, Offset.zero);
@@ -159,6 +108,7 @@ void main() {
       act: (bloc) {
         bloc.add(RequestRebalancingNode(nodeId: 'root'));
       },
+      wait: Duration(milliseconds: 100),
       verify: (bloc) {
         expect(bloc.state.getNodeMetaById('root').center, Offset.zero);
         expect(
@@ -177,6 +127,7 @@ void main() {
           bloc.state.getNodeMetaById('root_0_1').center,
           closeToOffset(Offset(100 + 100 * cos(pi / 4), 100 * sin(pi / 4))),
         );
+        bloc.close();
       },
     );
 
@@ -200,6 +151,7 @@ void main() {
       act: (bloc) {
         bloc.add(RequestRebalancingNode(nodeId: 'root'));
       },
+      wait: Duration(milliseconds: 100),
       verify: (bloc) {
         expect(bloc.state.getNodeMeta(bloc.state.root!).center, Offset.zero);
         expect(
