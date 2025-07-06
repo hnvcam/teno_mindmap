@@ -26,4 +26,7 @@ sealed class NodeMeta with _$NodeMeta {
       _$NodeMetaFromJson(json);
 
   double get radius => max(size.width, size.height) / 2;
+
+  Rect get rect =>
+      Rect.fromCenter(center: center, width: size.width, height: size.height);
 }

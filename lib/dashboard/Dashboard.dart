@@ -110,11 +110,11 @@ class _DashboardState extends State<Dashboard> {
     required NodeMeta nodeMeta,
     required Offset tapLocation,
   }) {
-    final renderObject = context.findRenderObject() as RenderBox;
-    final radius = max(
-      renderObject.paintBounds.width,
-      renderObject.paintBounds.height,
-    );
+    final renderBox = context.findRenderObject() as RenderBox;
+    final radius =
+        max(renderBox.size.width, renderBox.size.height) / 2 +
+        min(renderBox.size.width, renderBox.size.height);
+
     final l10n = AppLocalizations.of(context)!;
     StarMenuOverlay.displayStarMenu(
       context,
@@ -133,9 +133,9 @@ class _DashboardState extends State<Dashboard> {
             icon: Icons.add,
             text: l10n.addChild,
             onPressed:
-                () => DashboardBloc.read(
-                  context,
-                ).add(RequestAddChildNode(parentNodeId: node.id)),
+                () => DashboardBloc.read(context).add(
+                  RequestAddChildNode(parentNodeId: node.id, title: 'test'),
+                ),
           ),
           IconTextButton(icon: Icons.edit, text: l10n.edit, onPressed: () {}),
           if (!node.isRoot)

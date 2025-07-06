@@ -13,8 +13,9 @@ class RequestRebalancingNode extends DashboardEvent {
 }
 
 class RequestAddChildNode extends DashboardEvent {
-  const RequestAddChildNode({required this.parentNodeId});
+  const RequestAddChildNode({required this.parentNodeId, required this.title});
   final String parentNodeId;
+  final String title;
 }
 
 class NodeSizeChangedEvent extends DashboardEvent {

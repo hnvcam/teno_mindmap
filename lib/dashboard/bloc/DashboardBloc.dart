@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:teno_mindmap/models/NodeMeta.dart';
 
 import '../../models/Node.dart';
 
+part 'DashboardBlocUtils.dart';
 part 'DashboardEvent.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
@@ -31,7 +33,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     emit(
       state.addNode(
         parentId: event.parentNodeId,
-        nodeMeta: NodeMeta(title: 'title'),
+        nodeMeta: NodeMeta(title: event.title),
       ),
     );
     add(RequestRebalancingNode(nodeId: event.parentNodeId));
@@ -44,7 +46,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final node = state.nodeOf(event.nodeId);
     final span = _getNodeAngularSpan(node);
     emit(
-      _layoutRadialRecursive(
+      _layoutRadial(
         currentState: state,
         node: node,
         startAngle: span.start,
@@ -89,48 +91,73 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     return (start: startAngle, end: endAngle);
   }
 
-  DashboardState _layoutRadialRecursive({
+  DashboardState _layoutRadial({
     required DashboardState currentState,
     required Node node,
     required double startAngle,
     required double endAngle,
     bool forced = false,
   }) {
-    final nodeMeta = currentState.getNodeMeta(node);
-    final children = node.children;
-    if (children.isEmpty) return currentState;
-
-    final angleStep = _getAngleStep(startAngle, endAngle, children.length);
-    double childStartAngle = startAngle;
-
-    final radiusToChildren = nodeMeta.radius + currentState.spacing;
-
     DashboardState updatedState = currentState;
-    for (final child in children) {
-      final childMeta = updatedState.getNodeMeta(child);
-      final childEndAngle = childStartAngle + angleStep;
+    final queue = _LayoutTaskQueue();
+    queue.addTask(node: node, startAngle: startAngle, endAngle: endAngle);
 
-      if (forced || !childMeta.isPositionLocked) {
-        final midAngle = (childStartAngle + childEndAngle) / 2;
-        final childCenter = Offset(
-          nodeMeta.center.dx + radiusToChildren * cos(midAngle),
-          nodeMeta.center.dy + radiusToChildren * sin(midAngle),
-        );
-
-        final updatedChildMeta = childMeta.copyWith(center: childCenter);
-
-        updatedState = updatedState.updateNode(child.id, updatedChildMeta);
-
-        updatedState = _layoutRadialRecursive(
-          currentState: updatedState,
-          node: child,
-          startAngle: childStartAngle,
-          endAngle: childEndAngle,
-          forced: forced,
-        );
+    while (queue.isNotEmpty) {
+      final current = queue.nextTask;
+      if (current.node.isLeaf) {
+        continue;
       }
+      final currentMeta = updatedState.getNodeMeta(current.node);
+      final children = current.node.children;
+      final angleStep = _getAngleStep(
+        current.startAngle,
+        current.endAngle,
+        children.length,
+      );
+      int multiplier = 1;
+      bool hasOverlapped = true;
+      while (hasOverlapped) {
+        hasOverlapped = false;
 
-      childStartAngle = childEndAngle;
+        final radiusToChildren =
+            currentMeta.radius + currentState.spacing * multiplier;
+
+        double childStartAngle = current.startAngle;
+        List<Rect> allRects = [currentMeta.rect];
+        for (final child in children) {
+          final childMeta = updatedState.getNodeMeta(child);
+
+          final childEndAngle = childStartAngle + angleStep;
+
+          if (forced || !childMeta.isPositionLocked) {
+            final midAngle = (childStartAngle + childEndAngle) / 2;
+            final childCenter = Offset(
+              currentMeta.center.dx + radiusToChildren * cos(midAngle),
+              currentMeta.center.dy + radiusToChildren * sin(midAngle),
+            );
+
+            final updatedChildMeta = childMeta.copyWith(center: childCenter);
+
+            final childRect = updatedChildMeta.rect;
+            if (allRects.any((element) => childRect.overlaps(element))) {
+              multiplier++;
+              hasOverlapped = true;
+              break;
+            }
+            allRects.add(childRect);
+
+            updatedState = updatedState.updateNode(child.id, updatedChildMeta);
+          }
+
+          queue.addTask(
+            node: child,
+            startAngle: childStartAngle,
+            endAngle: childEndAngle,
+          );
+
+          childStartAngle = childEndAngle;
+        }
+      }
     }
 
     return updatedState;

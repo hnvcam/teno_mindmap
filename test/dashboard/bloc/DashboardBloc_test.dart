@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:teno_mindmap/dashboard/bloc/DashboardBloc.dart';
 import 'package:teno_mindmap/dashboard/bloc/DashboardState.dart';
 import 'package:teno_mindmap/models/Node.dart';
+import 'package:teno_mindmap/models/NodeMeta.dart';
 
 import '../../testUtils.dart';
 
@@ -122,6 +123,92 @@ void main() {
       verify: (bloc) {
         expect(bloc.state.getNodeMeta(bloc.state.root!).center, Offset.zero);
         expect(bloc.state.getNodeMeta(testChildren[0]).center, Offset.zero);
+      },
+    );
+
+    blocTest<DashboardBloc, DashboardState>(
+      'rebalances 3 levels map',
+      setUp: () {
+        final sample = sampleChildren(rootState, nodeId: 'root', count: 2);
+        final sample2 = sampleChildren(
+          sample.newState,
+          nodeId: sample.children[0].id,
+          count: 2,
+        );
+        testState = sample2.newState
+            .updateNode('root', NodeMeta(title: 'Root', size: Size(100, 50)))
+            .updateNode(
+              'root_0',
+              NodeMeta(title: 'root_0', size: Size(100, 50)),
+            )
+            .updateNode(
+              'root_1',
+              NodeMeta(title: 'root_1', size: Size(100, 50)),
+            )
+            .updateNode(
+              'root_0_0',
+              NodeMeta(title: 'root_0_0', size: Size(100, 50)),
+            )
+            .updateNode(
+              'root_0_1',
+              NodeMeta(title: 'root_0_1', size: Size(100, 50)),
+            );
+        testChildren = sample2.children;
+      },
+      build: () => DashboardBloc(testState),
+      act: (bloc) {
+        bloc.add(RequestRebalancingNode(nodeId: 'root'));
+      },
+      verify: (bloc) {
+        expect(bloc.state.getNodeMetaById('root').center, Offset.zero);
+        expect(
+          bloc.state.getNodeMetaById('root_0').center,
+          closeToOffset(Offset(100, 0)),
+        );
+        expect(
+          bloc.state.getNodeMetaById('root_1').center,
+          closeToOffset(Offset(-100, 0)),
+        );
+        expect(
+          bloc.state.getNodeMetaById('root_0_0').center,
+          closeToOffset(Offset(100 + 100 * cos(-pi / 4), 100 * sin(-pi / 4))),
+        );
+        expect(
+          bloc.state.getNodeMetaById('root_0_1').center,
+          closeToOffset(Offset(100 + 100 * cos(pi / 4), 100 * sin(pi / 4))),
+        );
+      },
+    );
+
+    blocTest<DashboardBloc, DashboardState>(
+      'rebalances overlapped nodes',
+      setUp: () {
+        final sample = sampleChildren(
+          DashboardState(spacing: 10).newRoot(id: 'root'),
+          nodeId: 'root',
+          count: 1,
+        );
+        testState = sample.newState
+            .updateNode('root', NodeMeta(title: 'root', size: Size(100, 50)))
+            .updateNode(
+              'root_0',
+              NodeMeta(title: 'root_0', size: Size(100, 50)),
+            );
+        testChildren = sample.children;
+      },
+      build: () => DashboardBloc(testState),
+      act: (bloc) {
+        bloc.add(RequestRebalancingNode(nodeId: 'root'));
+      },
+      verify: (bloc) {
+        expect(bloc.state.getNodeMeta(bloc.state.root!).center, Offset.zero);
+        expect(
+          bloc.state
+              .getNodeMeta(testChildren[0])
+              .rect
+              .overlaps(bloc.state.getNodeMetaById('root').rect),
+          false,
+        );
       },
     );
   });
