@@ -1,7 +1,6 @@
 // ----------------------------------------------------
 // The Grid Canvas Widget
 // ----------------------------------------------------
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teno_mindmap/canvas/CanvasActivityDetector.dart';
@@ -88,22 +87,22 @@ class GridPainter extends CustomPainter {
     }
 
     /// this draws the root position of the canvas
-    if (kDebugMode) {
-      final Paint rootPaint =
-          Paint()
-            ..color = Colors.black
-            ..strokeWidth = 1.0;
-      canvas.drawLine(
-        Offset(offset.dx - gridSize / 4, offset.dy) * scale,
-        Offset(offset.dx + gridSize / 4, offset.dy) * scale,
-        rootPaint,
-      );
-      canvas.drawLine(
-        Offset(offset.dx, offset.dy - gridSize / 4) * scale,
-        Offset(offset.dx, offset.dy + gridSize / 4) * scale,
-        rootPaint,
-      );
-    }
+    // if (kDebugMode) {
+    //   final Paint rootPaint =
+    //       Paint()
+    //         ..color = Colors.black
+    //         ..strokeWidth = 1.0;
+    //   canvas.drawLine(
+    //     Offset(offset.dx - gridSize / 4, offset.dy) * scale,
+    //     Offset(offset.dx + gridSize / 4, offset.dy) * scale,
+    //     rootPaint,
+    //   );
+    //   canvas.drawLine(
+    //     Offset(offset.dx, offset.dy - gridSize / 4) * scale,
+    //     Offset(offset.dx, offset.dy + gridSize / 4) * scale,
+    //     rootPaint,
+    //   );
+    // }
   }
 
   @override

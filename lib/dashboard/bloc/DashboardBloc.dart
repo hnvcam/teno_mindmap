@@ -22,6 +22,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<RequestRebalancingNode>(_onRequestRebalancingNodes);
     on<NodeSizeChangedEvent>(_onNodeSizeChanged);
     on<RequestFixNodeCenter>(_onRequestFixNodePosition);
+    on<RequestUpdateNodeMeta>(_onRequestUpdateChildNodeData);
+    on<RequestRemoveNode>(_onRequestRemoveNode);
 
     _layoutService = LayoutService(state);
     _layoutService.listen(stream);
@@ -43,12 +45,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     RequestAddChildNode event,
     Emitter<DashboardState> emit,
   ) {
-    emit(
-      state.addNode(
-        parentId: event.parentNodeId,
-        nodeMeta: NodeMeta(title: event.title),
-      ),
-    );
+    emit(state.addNode(parentId: event.parentNodeId, nodeMeta: event.nodeMeta));
   }
 
   FutureOr<void> _onRequestRebalancingNodes(
@@ -101,5 +98,34 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     emit(
       state.updateNode(event.nodeId, nodeMeta.copyWith(center: event.center)),
     );
+  }
+
+  FutureOr<void> _onRequestUpdateChildNodeData(
+    RequestUpdateNodeMeta event,
+    Emitter<DashboardState> emit,
+  ) {
+    final nodeMeta = state.getNodeMetaById(event.nodeId);
+    emit(
+      state.updateNode(
+        event.nodeId,
+        nodeMeta.copyWith(
+          title:
+              event.title?.isNotEmpty == true ? event.title! : nodeMeta.title,
+          data:
+              event.data?.isNotEmpty == true
+                  ? (event.merged
+                      ? {...nodeMeta.data, ...event.data!}
+                      : event.data!)
+                  : nodeMeta.data,
+        ),
+      ),
+    );
+  }
+
+  FutureOr<void> _onRequestRemoveNode(
+    RequestRemoveNode event,
+    Emitter<DashboardState> emit,
+  ) {
+    emit(state.removeNode(event.nodeId));
   }
 }

@@ -6,7 +6,6 @@ import 'package:teno_mindmap/canvas/GridCanvas.dart';
 import 'package:teno_mindmap/canvas/bloc/CanvasBloc.dart';
 import 'package:teno_mindmap/dashboard/bloc/DashboardState.dart';
 import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
-import 'package:teno_mindmap/models/NodeMeta.dart';
 
 import 'dashboard/Dashboard.dart';
 import 'dashboard/bloc/DashboardBloc.dart';
@@ -30,20 +29,9 @@ class MindMap extends StatelessWidget {
         BlocProvider(
           create:
               (_) => DashboardBloc(
-                DashboardState.empty
-                    .newRoot(id: 'root', title: title)
-                    .addNode(
-                      parentId: 'root',
-                      nodeMeta: NodeMeta(id: 'root_0', title: 'root_0'),
-                    )
-                    .addNode(
-                      parentId: 'root',
-                      nodeMeta: NodeMeta(id: 'root_1', title: 'root_1'),
-                    )
-                    .addNode(
-                      parentId: 'root_0',
-                      nodeMeta: NodeMeta(id: 'root_0_0', title: 'root_0_0'),
-                    ),
+                DashboardState(
+                  minSpacing: 100,
+                ).newRoot(id: 'root', title: title),
               ),
         ),
       ],

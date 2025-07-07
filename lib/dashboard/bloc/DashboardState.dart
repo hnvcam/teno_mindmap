@@ -110,7 +110,7 @@ sealed class DashboardState with _$DashboardState {
     final newNodes = _updateWithAncestors(parentNode);
 
     return _copyWith(
-      nodes: newNodes,
+      nodes: newNodes..remove(nodeId),
       nodeMetas: Map.of(nodeMetas)..remove(nodeId),
     );
   }

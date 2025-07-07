@@ -18,7 +18,6 @@ sealed class NodeMeta with _$NodeMeta {
     @OffsetJsonConverter() @Default(Offset.zero) Offset center,
     @Default(false) bool isPositionLocked,
     @SizeJsonConverter() @Default(Size.zero) Size size,
-    @Default('default') String type,
     @Default({}) Map<String, dynamic> data,
   }) = _NodeMeta;
 

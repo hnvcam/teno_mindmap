@@ -22,7 +22,6 @@ _NodeMeta _$NodeMetaFromJson(Map<String, dynamic> json) => _NodeMeta(
           : const SizeJsonConverter().fromJson(
             json['size'] as Map<String, double>,
           ),
-  type: json['type'] as String? ?? 'default',
   data: json['data'] as Map<String, dynamic>? ?? const {},
 );
 
@@ -32,6 +31,5 @@ Map<String, dynamic> _$NodeMetaToJson(_NodeMeta instance) => <String, dynamic>{
   'center': const OffsetJsonConverter().toJson(instance.center),
   'isPositionLocked': instance.isPositionLocked,
   'size': const SizeJsonConverter().toJson(instance.size),
-  'type': instance.type,
   'data': instance.data,
 };

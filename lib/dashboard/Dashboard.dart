@@ -11,6 +11,7 @@ import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
 import 'package:teno_mindmap/models/NodeMeta.dart';
 
 import '../canvas/bloc/CanvasState.dart';
+import '../constants.dart';
 import '../models/Node.dart';
 import 'bloc/DashboardBloc.dart';
 import 'bloc/DashboardState.dart';
@@ -158,21 +159,42 @@ class _DashboardState extends State<Dashboard> {
             radiusX: radius,
           ),
         ),
+        onItemTapped: (index, controller) {
+          controller.closeMenu?.call();
+        },
         items: [
           IconTextButton(
             icon: Icons.add,
             text: l10n.addChild,
             onPressed:
                 () => DashboardBloc.read(context).add(
-                  RequestAddChildNode(parentNodeId: node.id, title: 'test'),
+                  RequestAddChildNode(
+                    parentNodeId: node.id,
+                    nodeMeta: NodeMeta(
+                      title: '${nodeMeta.title}_${node.children.length}',
+                    ),
+                  ),
                 ),
           ),
-          IconTextButton(icon: Icons.edit, text: l10n.edit, onPressed: () {}),
+          IconTextButton(
+            icon: Icons.edit,
+            text: l10n.edit,
+            onPressed:
+                () => DashboardBloc.read(context).add(
+                  RequestUpdateNodeMeta(
+                    nodeId: node.id,
+                    data: {nodeEditingKey: true},
+                  ),
+                ),
+          ),
           if (!node.isRoot)
             IconTextButton(
               icon: Icons.delete,
               text: l10n.delete,
-              onPressed: () {},
+              onPressed:
+                  () => DashboardBloc.read(
+                    context,
+                  ).add(RequestRemoveNode(nodeId: node.id)),
             ),
         ],
         parentContext: context,

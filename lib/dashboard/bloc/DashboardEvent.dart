@@ -13,9 +13,30 @@ class RequestRebalancingNode extends DashboardEvent {
 }
 
 class RequestAddChildNode extends DashboardEvent {
-  const RequestAddChildNode({required this.parentNodeId, required this.title});
+  const RequestAddChildNode({
+    required this.parentNodeId,
+    required this.nodeMeta,
+  });
   final String parentNodeId;
-  final String title;
+  final NodeMeta nodeMeta;
+}
+
+class RequestUpdateNodeMeta extends DashboardEvent {
+  const RequestUpdateNodeMeta({
+    required this.nodeId,
+    this.data,
+    this.title,
+    this.merged = true,
+  });
+  final String nodeId;
+  final String? title;
+  final Map<String, dynamic>? data;
+  final bool merged;
+}
+
+class RequestRemoveNode extends DashboardEvent {
+  const RequestRemoveNode({required this.nodeId});
+  final String nodeId;
 }
 
 class NodeSizeChangedEvent extends DashboardEvent {
