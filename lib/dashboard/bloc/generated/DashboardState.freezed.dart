@@ -16,7 +16,11 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DashboardState {
 
- Map<String, Node> get nodes; Map<String, NodeMeta> get nodeMetas; Node? get root; double get spacing; double get radialAngleStart;
+ Map<String, Node> get nodes; Map<String, NodeMeta> get nodeMetas; Node? get root;/// minimum space between parent's center and child's center
+/// excluding the Node.radius
+ double get minSpacing;/// if there is an overlapping on nodes, increase the space by this step
+ double get stepSpacing;/// Where the angle of the radial layout start, in radian.
+ double get radialAngleStart;
 
   /// Serializes this DashboardState to a JSON map.
   Map<String, dynamic> toJson();
@@ -24,16 +28,16 @@ mixin _$DashboardState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&const DeepCollectionEquality().equals(other.nodes, nodes)&&const DeepCollectionEquality().equals(other.nodeMetas, nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.spacing, spacing) || other.spacing == spacing)&&(identical(other.radialAngleStart, radialAngleStart) || other.radialAngleStart == radialAngleStart));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&const DeepCollectionEquality().equals(other.nodes, nodes)&&const DeepCollectionEquality().equals(other.nodeMetas, nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.minSpacing, minSpacing) || other.minSpacing == minSpacing)&&(identical(other.stepSpacing, stepSpacing) || other.stepSpacing == stepSpacing)&&(identical(other.radialAngleStart, radialAngleStart) || other.radialAngleStart == radialAngleStart));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(nodes),const DeepCollectionEquality().hash(nodeMetas),root,spacing,radialAngleStart);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(nodes),const DeepCollectionEquality().hash(nodeMetas),root,minSpacing,stepSpacing,radialAngleStart);
 
 @override
 String toString() {
-  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, spacing: $spacing, radialAngleStart: $radialAngleStart)';
+  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, minSpacing: $minSpacing, stepSpacing: $stepSpacing, radialAngleStart: $radialAngleStart)';
 }
 
 
@@ -46,7 +50,7 @@ String toString() {
 @JsonSerializable()
 
 class _DashboardState extends DashboardState {
-  const _DashboardState({final  Map<String, Node> nodes = const {}, final  Map<String, NodeMeta> nodeMetas = const {}, this.root, this.spacing = 50.0, this.radialAngleStart = -pi / 2}): _nodes = nodes,_nodeMetas = nodeMetas,super._();
+  const _DashboardState({final  Map<String, Node> nodes = const {}, final  Map<String, NodeMeta> nodeMetas = const {}, this.root, this.minSpacing = 50.0, this.stepSpacing = 20.0, this.radialAngleStart = -pi / 2}): _nodes = nodes,_nodeMetas = nodeMetas,super._();
   factory _DashboardState.fromJson(Map<String, dynamic> json) => _$DashboardStateFromJson(json);
 
  final  Map<String, Node> _nodes;
@@ -64,7 +68,12 @@ class _DashboardState extends DashboardState {
 }
 
 @override final  Node? root;
-@override@JsonKey() final  double spacing;
+/// minimum space between parent's center and child's center
+/// excluding the Node.radius
+@override@JsonKey() final  double minSpacing;
+/// if there is an overlapping on nodes, increase the space by this step
+@override@JsonKey() final  double stepSpacing;
+/// Where the angle of the radial layout start, in radian.
 @override@JsonKey() final  double radialAngleStart;
 
 
@@ -75,16 +84,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&const DeepCollectionEquality().equals(other._nodes, _nodes)&&const DeepCollectionEquality().equals(other._nodeMetas, _nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.spacing, spacing) || other.spacing == spacing)&&(identical(other.radialAngleStart, radialAngleStart) || other.radialAngleStart == radialAngleStart));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&const DeepCollectionEquality().equals(other._nodes, _nodes)&&const DeepCollectionEquality().equals(other._nodeMetas, _nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.minSpacing, minSpacing) || other.minSpacing == minSpacing)&&(identical(other.stepSpacing, stepSpacing) || other.stepSpacing == stepSpacing)&&(identical(other.radialAngleStart, radialAngleStart) || other.radialAngleStart == radialAngleStart));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_nodes),const DeepCollectionEquality().hash(_nodeMetas),root,spacing,radialAngleStart);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_nodes),const DeepCollectionEquality().hash(_nodeMetas),root,minSpacing,stepSpacing,radialAngleStart);
 
 @override
 String toString() {
-  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, spacing: $spacing, radialAngleStart: $radialAngleStart)';
+  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, minSpacing: $minSpacing, stepSpacing: $stepSpacing, radialAngleStart: $radialAngleStart)';
 }
 
 

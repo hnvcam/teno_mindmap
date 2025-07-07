@@ -17,4 +17,11 @@ sealed class Node with _$Node {
 
   bool get isLeaf => children.isEmpty;
   bool get isRoot => parentId == null;
+
+  int get span {
+    if (isLeaf) {
+      return 1;
+    }
+    return children.length;
+  }
 }

@@ -81,6 +81,9 @@ class LayoutService {
   void listen(Stream<DashboardState> stream) {
     _stateSubscription = stream.listen((state) {
       final changeIds = <String>{};
+
+      /// if a node changes in size, then its parent must be rebalanced
+      /// if a node changes in position, then its children must be rebalanced
       for (final entry in state.nodeMetas.entries) {
         final existingMeta = _currentState.nodeMetas[entry.key];
         if (existingMeta == null || existingMeta.size != entry.value.size) {
@@ -92,6 +95,15 @@ class LayoutService {
           }
         } else if ((existingMeta.center - entry.value.center).distance > 0.01) {
           changeIds.add(entry.key);
+        }
+      }
+
+      /// if a node changes in children count, then its parent must be rebalanced
+      for (final node in state.nodes.values) {
+        final existingNode = _currentState.nodes[node.id];
+        if (existingNode == null ||
+            existingNode.children.length != node.children.length) {
+          changeIds.add(node.isRoot ? node.id : node.parentId!);
         }
       }
 
@@ -136,37 +148,33 @@ class LayoutService {
     _processQueue();
   }
 
-  double getAngleStep(double start, double end, int childrenCount) =>
-      (end - start) / max(2, childrenCount);
-
   void _executeTask(LayoutTask task) {
     if (_currentState.nodeOf(task.nodeId).isLeaf) {
       return;
     }
     final nodeMeta = _currentState.getNodeMetaById(task.nodeId);
     final children = _currentState.nodeOf(task.nodeId).children;
-    final angleStep = getAngleStep(
-      task.startAngle,
-      task.endAngle,
-      children.length,
-    );
-    int multiplier = 1;
+    int multiplier = 0;
     bool hasOverlapped = true;
     while (hasOverlapped) {
       hasOverlapped = false;
 
       final radiusToChildren =
-          nodeMeta.radius + _currentState.spacing * multiplier;
+          nodeMeta.radius +
+          _currentState.minSpacing +
+          _currentState.stepSpacing * multiplier;
 
-      double childStartAngle = task.startAngle;
       List<Rect> allRects = [nodeMeta.rect];
       for (final child in children) {
         final childMeta = _currentState.getNodeMeta(child);
-
-        final childEndAngle = childStartAngle + angleStep;
+        final childSpan = _getNodeAngularPanWithinParent(
+          child,
+          parentStart: task.startAngle,
+          parentEnd: task.endAngle,
+        );
 
         if (task.forced || !childMeta.isPositionLocked) {
-          final midAngle = (childStartAngle + childEndAngle) / 2;
+          final midAngle = (childSpan.start + childSpan.end) / 2;
           final childCenter = Offset(
             nodeMeta.center.dx + radiusToChildren * cos(midAngle),
             nodeMeta.center.dy + radiusToChildren * sin(midAngle),
@@ -197,8 +205,6 @@ class LayoutService {
 
         /// we don't need to add recursive children of childNode to taskQueue because
         /// when childNode center gets updated, it will trigger the updates
-
-        childStartAngle = childEndAngle;
       }
     }
   }
@@ -217,30 +223,80 @@ class LayoutService {
     _processQueue();
   }
 
+  ({double start, double end}) _getNodeAngularPanWithinParent(
+    Node node, {
+    required double parentStart,
+    required double parentEnd,
+  }) {
+    final parent = _currentState.parentOf(node);
+    assert(parent != null, 'Must not call this function on Root!');
+
+    /// if single child, then it should cover all its parent span
+    /// or max of pi
+    if (parent!.children.length == 1) {
+      return (start: parentStart, end: min(parentStart + pi, parentEnd));
+    }
+
+    final parentAngle = parentEnd - parentStart;
+    assert(parentAngle <= 2 * pi, 'How come a 2d has more than 360 degrees?');
+    final maxChildSpan =
+        parentAngle <= pi
+            ?
+            // if parentAngle is less than pi, then we don't limit the child span
+            32767
+            : parent.children.length - 1;
+
+    /// we need to ensure that no child of this parent has span larger than pi.
+    int totalSpan = 0;
+    final overriddenSpan = <Node, int>{};
+    for (final child in parent.children) {
+      final childSpan = min(maxChildSpan, child.span);
+      totalSpan += childSpan;
+      overriddenSpan[child] = childSpan;
+    }
+
+    /// this min is a bit redundant, however just let it be for safe heart
+    final steppedAngle = min(pi, (parentEnd - parentStart) / totalSpan);
+    double start = parentStart;
+    double end = parentStart;
+    for (int i = 0; i < parent.children.length - 1; i++) {
+      final child = parent.children[i];
+      final step = min(pi, steppedAngle * overriddenSpan[child]!);
+      if (child.id == node.id) {
+        end = start + step;
+        break;
+      }
+      start += step;
+    }
+    if (end == parentStart) {
+      end = parentEnd;
+    }
+    return (start: start, end: end);
+  }
+
   ({double start, double end}) getNodeAngularSpan(Node node) {
     List<Node> ancestors = [node];
     Node? parent = _currentState.parentOf(node);
-    while (parent != null) {
+    while (parent != null && !parent.isRoot) {
       ancestors.insert(0, parent);
       parent = _currentState.parentOf(parent);
     }
+
+    /// start from Root, it has 2 * pi span
     double startAngle = _currentState.radialAngleStart;
     double endAngle = _currentState.radialAngleStart + 2 * pi;
-    for (int i = 0; i < ancestors.length - 1; i++) {
+    for (int i = 0; i < ancestors.length; i++) {
       final ancestor = ancestors[i];
-      if (ancestor.children.isEmpty) {
-        throw Exception(
-          'Invalid structure! Ancestor ${ancestor.id} has no children',
-        );
+      if (ancestor.isRoot) {
+        continue;
       }
-      final steppedAngle = getAngleStep(
-        startAngle,
-        endAngle,
-        ancestor.children.length,
+      final ancestorSpan = _getNodeAngularPanWithinParent(
+        ancestor,
+        parentStart: startAngle,
+        parentEnd: endAngle,
       );
-      final nextAncestorIndex = ancestor.children.indexOf(ancestors[i + 1]);
-      startAngle += steppedAngle * nextAncestorIndex;
-      endAngle = startAngle + steppedAngle;
+      startAngle = ancestorSpan.start;
+      endAngle = ancestorSpan.end;
     }
     return (start: startAngle, end: endAngle);
   }

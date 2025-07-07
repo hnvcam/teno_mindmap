@@ -135,7 +135,7 @@ void main() {
       'rebalances overlapped nodes',
       setUp: () {
         final sample = sampleChildren(
-          DashboardState(spacing: 10).newRoot(id: 'root'),
+          DashboardState(minSpacing: 10).newRoot(id: 'root'),
           nodeId: 'root',
           count: 1,
         );

@@ -20,7 +20,15 @@ sealed class DashboardState with _$DashboardState {
     @Default({}) Map<String, Node> nodes,
     @Default({}) Map<String, NodeMeta> nodeMetas,
     Node? root,
-    @Default(50.0) double spacing,
+
+    /// minimum space between parent's center and child's center
+    /// excluding the Node.radius
+    @Default(50.0) double minSpacing,
+
+    /// if there is an overlapping on nodes, increase the space by this step
+    @Default(20.0) double stepSpacing,
+
+    /// Where the angle of the radial layout start, in radian.
     @Default(-pi / 2) double radialAngleStart,
   }) = _DashboardState;
 
@@ -31,7 +39,6 @@ sealed class DashboardState with _$DashboardState {
   DashboardState _copyWith({
     Map<String, Node>? nodes,
     Map<String, NodeMeta>? nodeMetas,
-    double? spacing,
     double? radialAngleStart,
   }) {
     final effectiveNodes = nodes ?? this.nodes;
@@ -44,7 +51,8 @@ sealed class DashboardState with _$DashboardState {
               : effectiveNodes.values
                   .where((element) => element.isRoot)
                   .firstOrNull,
-      spacing: spacing ?? this.spacing,
+      minSpacing: minSpacing,
+      stepSpacing: stepSpacing,
       radialAngleStart: radialAngleStart ?? this.radialAngleStart,
     );
   }

@@ -59,4 +59,8 @@ class _LinePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) =>
       oldDelegate is _LinePainter &&
       (oldDelegate.from != from || oldDelegate.to != to);
+
+  /// the line connector should not receive pointer events
+  @override
+  bool? hitTest(Offset position) => false;
 }

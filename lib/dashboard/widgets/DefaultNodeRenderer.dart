@@ -20,6 +20,7 @@ class DefaultNodeRenderer extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: theme.primaryColor),
+        color: theme.colorScheme.onPrimary,
       ),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Text(nodeMeta.title),
