@@ -6,7 +6,7 @@ Simple implementation of a Mind Map using a Radial layout.
 This layout ensures child nodes do not overlap with their parents or siblings by automatically rebalancing node positions. 
 Additionally, nodes with more children automatically take up more angular span.
 
-![teno_mindmap.png](teno_mindmap.png)
+![teno_mindmap.png](https://raw.githubusercontent.com/hnvcam/teno_mindmap/refs/heads/main/teno_mindmap.png)
 
 ## Features
 With the default implementation, it provides:
