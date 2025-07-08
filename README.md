@@ -1,39 +1,44 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+[![Build Status](https://github.com/hnvcam/teno_mindmap/actions/workflows/ci.yaml/badge.svg)](https://github.com/hnvcam/teno_mindmap)
+[![codecov](https://codecov.io/gh/hnvcam/teno_mindmap/graph/badge.svg?token=02SX31INHW)](https://codecov.io/gh/hnvcam/teno_mindmap)
+[![Pub Package](https://img.shields.io/pub/v/teno_mindmap)](https://pub.dev/packages/teno_mindmap)
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Simple implementation of a Mind Map using a Radial layout.
+This layout ensures child nodes do not overlap with their parents or siblings by automatically rebalancing node positions. 
+Additionally, nodes with more children automatically take up more angular span.
 
 ## Features
+With the default implementation, it provides:
+- Automatic rebalancing
+- Add, update, and remove nodes
+- Panning and zooming support
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Fully customizable:
+- Node and connector rendering (see Dashboard.dart)
+- BLoC state management integration
 
 ## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Check out the example folder for usage with the default implementation.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```shell
+flutter pub add teno_mindmap
 ```
 
-## Additional information
+```dart
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Mind Map Canvas')),
+      body: const MindMap(title: 'Your Goal'),
+    );
+  }
+}
+```
+
+## TODO LIST:
+[] Increase test coverage
+[] Add prebuilt styles for the default implementation

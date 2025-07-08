@@ -1,5 +1,5 @@
 name: teno_mindmap
-description: "A new Flutter package project."
+description: "A simple Mind Map library with a ready-to-use starting implementation."
 version: 0.0.1
 homepage: https://github.com/hnvcam/teno_mindmap
 
