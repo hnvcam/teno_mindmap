@@ -9,11 +9,12 @@ import 'package:teno_mindmap/l10n/generated/app_localizations.dart';
 
 import 'dashboard/Dashboard.dart';
 import 'dashboard/bloc/DashboardBloc.dart';
+import 'models/MindMap.dart';
 
-class MindMap extends StatelessWidget {
+class MindMapEditor extends StatelessWidget {
   static final localizationDelegate = AppLocalizations.delegate;
 
-  const MindMap({super.key, required this.title});
+  const MindMapEditor({super.key, required this.title});
 
   final String title;
 
@@ -31,7 +32,8 @@ class MindMap extends StatelessWidget {
               (_) => DashboardBloc(
                 DashboardState(
                   minSpacing: 100,
-                ).newRoot(id: 'root', title: title),
+                  mindMap: MindMap(id: MindMap.uuid.v4(), title: title),
+                ),
               ),
         ),
       ],

@@ -1,29 +1,31 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:teno_mindmap/constants.dart';
 import 'package:teno_mindmap/dashboard/LayoutService.dart';
 import 'package:teno_mindmap/dashboard/bloc/DashboardState.dart';
-import 'package:teno_mindmap/models/Node.dart';
+import 'package:teno_mindmap/models/MindMap.dart';
 
 import '../testUtils.dart';
 
 main() {
   late DashboardState rootState;
   setUp(() {
-    rootState = DashboardState.empty
-        .newRoot(id: 'root')
-        .withRadialAngleStart(0);
+    rootState = DashboardState(
+      mindMap: MindMap(id: 'test', title: 'root'),
+      radialAngleStart: 0,
+    );
   });
 
   test('Root node has span of full angle', () {
-    expect(LayoutService(rootState).getNodeAngularSpan(Node(id: 'root')), (
-      start: 0,
-      end: 2 * pi,
-    ));
+    expect(
+      LayoutService(rootState).getNodeAngularSpan(rootState.mindMap.root),
+      (start: 0, end: 2 * pi),
+    );
   });
 
   test('Fist child of root has span of 0 to pi', () {
-    final sample = sampleChildren(rootState, nodeId: 'root', count: 1);
+    final sample = sampleChildren(rootState, nodeId: rootNodeId, count: 1);
     expect(
       LayoutService(sample.newState).getNodeAngularSpan(sample.children[0]),
       (start: 0, end: pi),
@@ -31,21 +33,21 @@ main() {
   });
 
   test('Second child of root has span of pi to 2pi', () {
-    final sample = sampleChildren(rootState, nodeId: 'root', count: 2);
+    final sample = sampleChildren(rootState, nodeId: rootNodeId, count: 2);
     expect(
       LayoutService(sample.newState).getNodeAngularSpan(sample.children[1]),
       (start: pi, end: 2 * pi),
     );
   });
   test('Fifth child of root has span of 9/5*pi to 2*pi', () {
-    final sample = sampleChildren(rootState, nodeId: 'root', count: 5);
+    final sample = sampleChildren(rootState, nodeId: rootNodeId, count: 5);
     expect(
       LayoutService(sample.newState).getNodeAngularSpan(sample.children[4]),
       (start: 8 * pi / 5, end: 2 * pi),
     );
   });
   test('Multi levels of singular line', () {
-    var sample = sampleChildren(rootState, nodeId: 'root', count: 1);
+    var sample = sampleChildren(rootState, nodeId: rootNodeId, count: 1);
     for (int i = 0; i < 10; i++) {
       sample = sampleChildren(
         sample.newState,
@@ -60,7 +62,7 @@ main() {
   });
 
   test('There levels balance', () {
-    final sample = sampleChildren(rootState, nodeId: 'root', count: 2);
+    final sample = sampleChildren(rootState, nodeId: rootNodeId, count: 2);
     final sample2 = sampleChildren(
       sample.newState,
       nodeId: sample.children[0].id,
@@ -74,7 +76,7 @@ main() {
   });
 
   test('Third child of 3rd child of root', () {
-    final sample = sampleChildren(rootState, nodeId: 'root', count: 3);
+    final sample = sampleChildren(rootState, nodeId: rootNodeId, count: 3);
     final sample2 = sampleChildren(
       sample.newState,
       nodeId: sample.children[2].id,

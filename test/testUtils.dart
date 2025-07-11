@@ -12,11 +12,13 @@ import 'package:teno_mindmap/models/NodeMeta.dart';
   DashboardState newState = currentState;
   for (int i = 0; i < count; i++) {
     final childId = '${nodeId}_$i';
-    newState = newState.addNode(
-      parentId: nodeId,
-      nodeMeta: NodeMeta(id: childId, title: childId),
+    newState = newState.copyWith(
+      mindMap: newState.mindMap.addNode(
+        parentId: nodeId,
+        nodeMeta: NodeMeta(id: childId, title: childId),
+      ),
     );
-    children.add(newState.nodeOf(childId));
+    children.add(newState.mindMap.nodeById(childId));
   }
   return (newState: newState, children: children);
 }

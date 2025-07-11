@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
-      localizationsDelegates: [MindMap.localizationDelegate],
+      localizationsDelegates: [MindMapEditor.localizationDelegate],
     );
   }
 }
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Mind Map Canvas')),
-      body: const MindMap(title: 'Your Goal'),
+      body: const MindMapEditor(title: 'Your Goal'),
     );
   }
 }

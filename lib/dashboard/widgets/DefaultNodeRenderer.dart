@@ -26,16 +26,16 @@ class DefaultNodeRenderer extends StatelessWidget {
     return BlocListener<DashboardBloc, DashboardState>(
       listenWhen:
           (previous, current) =>
-              !previous.nodeMetas.containsKey(node.id) ||
-              previous.nodeMetas[node.id]?.data[nodeEditingKey] !=
-                  current.nodeMetas[node.id]?.data[nodeEditingKey],
+              !previous.mindMap.nodeMetas.containsKey(node.id) ||
+              previous.mindMap.nodeMetas[node.id]?.data[nodeEditingKey] !=
+                  current.mindMap.nodeMetas[node.id]?.data[nodeEditingKey],
       listener: _onNodeEditingStateChanged,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: theme.primaryColor),
           color:
-              node.isRoot
+              isRoot(node)
                   ? theme.colorScheme.secondary
                   : theme.colorScheme.onPrimary,
         ),
@@ -43,7 +43,7 @@ class DefaultNodeRenderer extends StatelessWidget {
         child: Text(
           nodeMeta.title,
           style:
-              node.isRoot
+              isRoot(node)
                   ? theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.onSecondary,
                   )
@@ -54,7 +54,8 @@ class DefaultNodeRenderer extends StatelessWidget {
   }
 
   void _onNodeEditingStateChanged(BuildContext context, DashboardState state) {
-    final editing = state.getNodeMetaById(node.id).data[nodeEditingKey] == true;
+    final editing =
+        state.mindMap.nodeMetaById(node.id).data[nodeEditingKey] == true;
     if (editing) {
       final textController = TextEditingController(text: nodeMeta.title);
       final starMenuController = StarMenuController();

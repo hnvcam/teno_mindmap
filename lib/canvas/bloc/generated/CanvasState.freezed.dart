@@ -1,4 +1,3 @@
-// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -10,138 +9,159 @@ part of '../CanvasState.dart';
 // FreezedGenerator
 // **************************************************************************
 
-// dart format off
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+
 /// @nodoc
 mixin _$CanvasState {
-
 // @Default provides default values for the initial state.
- double get scale; Offset get offset;
-/// Create a copy of CanvasState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$CanvasStateCopyWith<CanvasState> get copyWith => _$CanvasStateCopyWithImpl<CanvasState>(this as CanvasState, _$identity);
+  double get scale => throw _privateConstructorUsedError;
+  Offset get offset => throw _privateConstructorUsedError;
 
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CanvasState&&(identical(other.scale, scale) || other.scale == scale)&&(identical(other.offset, offset) || other.offset == offset));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,scale,offset);
-
-@override
-String toString() {
-  return 'CanvasState(scale: $scale, offset: $offset)';
-}
-
-
+  /// Create a copy of CanvasState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CanvasStateCopyWith<CanvasState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract mixin class $CanvasStateCopyWith<$Res>  {
-  factory $CanvasStateCopyWith(CanvasState value, $Res Function(CanvasState) _then) = _$CanvasStateCopyWithImpl;
-@useResult
-$Res call({
- double scale, Offset offset
-});
-
-
-
-
+abstract class $CanvasStateCopyWith<$Res> {
+  factory $CanvasStateCopyWith(
+          CanvasState value, $Res Function(CanvasState) then) =
+      _$CanvasStateCopyWithImpl<$Res, CanvasState>;
+  @useResult
+  $Res call({double scale, Offset offset});
 }
+
 /// @nodoc
-class _$CanvasStateCopyWithImpl<$Res>
+class _$CanvasStateCopyWithImpl<$Res, $Val extends CanvasState>
     implements $CanvasStateCopyWith<$Res> {
-  _$CanvasStateCopyWithImpl(this._self, this._then);
+  _$CanvasStateCopyWithImpl(this._value, this._then);
 
-  final CanvasState _self;
-  final $Res Function(CanvasState) _then;
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
-/// Create a copy of CanvasState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? scale = null,Object? offset = null,}) {
-  return _then(_self.copyWith(
-scale: null == scale ? _self.scale : scale // ignore: cast_nullable_to_non_nullable
-as double,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as Offset,
-  ));
+  /// Create a copy of CanvasState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? scale = null,
+    Object? offset = null,
+  }) {
+    return _then(_value.copyWith(
+      scale: null == scale
+          ? _value.scale
+          : scale // ignore: cast_nullable_to_non_nullable
+              as double,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as Offset,
+    ) as $Val);
+  }
 }
 
+/// @nodoc
+abstract class _$$CanvasStateImplCopyWith<$Res>
+    implements $CanvasStateCopyWith<$Res> {
+  factory _$$CanvasStateImplCopyWith(
+          _$CanvasStateImpl value, $Res Function(_$CanvasStateImpl) then) =
+      __$$CanvasStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({double scale, Offset offset});
 }
 
+/// @nodoc
+class __$$CanvasStateImplCopyWithImpl<$Res>
+    extends _$CanvasStateCopyWithImpl<$Res, _$CanvasStateImpl>
+    implements _$$CanvasStateImplCopyWith<$Res> {
+  __$$CanvasStateImplCopyWithImpl(
+      _$CanvasStateImpl _value, $Res Function(_$CanvasStateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CanvasState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? scale = null,
+    Object? offset = null,
+  }) {
+    return _then(_$CanvasStateImpl(
+      scale: null == scale
+          ? _value.scale
+          : scale // ignore: cast_nullable_to_non_nullable
+              as double,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as Offset,
+    ));
+  }
+}
 
 /// @nodoc
 
-
-class _CanvasState extends CanvasState {
-  const _CanvasState({this.scale = 1.0, this.offset = Offset.zero}): super._();
-  
+class _$CanvasStateImpl extends _CanvasState {
+  const _$CanvasStateImpl({this.scale = 1.0, this.offset = Offset.zero})
+      : super._();
 
 // @Default provides default values for the initial state.
-@override@JsonKey() final  double scale;
-@override@JsonKey() final  Offset offset;
+  @override
+  @JsonKey()
+  final double scale;
+  @override
+  @JsonKey()
+  final Offset offset;
 
-/// Create a copy of CanvasState
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$CanvasStateCopyWith<_CanvasState> get copyWith => __$CanvasStateCopyWithImpl<_CanvasState>(this, _$identity);
+  @override
+  String toString() {
+    return 'CanvasState(scale: $scale, offset: $offset)';
+  }
 
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CanvasStateImpl &&
+            (identical(other.scale, scale) || other.scale == scale) &&
+            (identical(other.offset, offset) || other.offset == offset));
+  }
 
+  @override
+  int get hashCode => Object.hash(runtimeType, scale, offset);
 
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CanvasState&&(identical(other.scale, scale) || other.scale == scale)&&(identical(other.offset, offset) || other.offset == offset));
+  /// Create a copy of CanvasState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CanvasStateImplCopyWith<_$CanvasStateImpl> get copyWith =>
+      __$$CanvasStateImplCopyWithImpl<_$CanvasStateImpl>(this, _$identity);
 }
 
+abstract class _CanvasState extends CanvasState {
+  const factory _CanvasState({final double scale, final Offset offset}) =
+      _$CanvasStateImpl;
+  const _CanvasState._() : super._();
 
-@override
-int get hashCode => Object.hash(runtimeType,scale,offset);
+// @Default provides default values for the initial state.
+  @override
+  double get scale;
+  @override
+  Offset get offset;
 
-@override
-String toString() {
-  return 'CanvasState(scale: $scale, offset: $offset)';
+  /// Create a copy of CanvasState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CanvasStateImplCopyWith<_$CanvasStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
-
-
-}
-
-/// @nodoc
-abstract mixin class _$CanvasStateCopyWith<$Res> implements $CanvasStateCopyWith<$Res> {
-  factory _$CanvasStateCopyWith(_CanvasState value, $Res Function(_CanvasState) _then) = __$CanvasStateCopyWithImpl;
-@override @useResult
-$Res call({
- double scale, Offset offset
-});
-
-
-
-
-}
-/// @nodoc
-class __$CanvasStateCopyWithImpl<$Res>
-    implements _$CanvasStateCopyWith<$Res> {
-  __$CanvasStateCopyWithImpl(this._self, this._then);
-
-  final _CanvasState _self;
-  final $Res Function(_CanvasState) _then;
-
-/// Create a copy of CanvasState
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? scale = null,Object? offset = null,}) {
-  return _then(_CanvasState(
-scale: null == scale ? _self.scale : scale // ignore: cast_nullable_to_non_nullable
-as double,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
-as Offset,
-  ));
-}
-
-
-}
-
-// dart format on

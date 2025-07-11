@@ -9,7 +9,7 @@ part 'generated/NodeMeta.freezed.dart';
 part 'generated/NodeMeta.g.dart';
 
 @freezed
-sealed class NodeMeta with _$NodeMeta {
+class NodeMeta with _$NodeMeta {
   const NodeMeta._();
 
   const factory NodeMeta({

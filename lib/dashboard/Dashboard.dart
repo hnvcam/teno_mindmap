@@ -75,12 +75,9 @@ class _DashboardState extends State<Dashboard> {
         return BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
             final List<Widget> connectors = [];
-            for (final node in state.nodes.values) {
-              if (node.isRoot) {
-                continue;
-              }
-              final nodeMeta = state.getNodeMeta(node);
-              final parentMeta = state.getNodeMetaById(node.parentId!);
+            for (final node in state.mindMap.nodes.values) {
+              final nodeMeta = state.mindMap.nodeMetaOf(node);
+              final parentMeta = state.mindMap.nodeMetaById(node.parentId);
               connectors.add(
                 ConnectorWrapper(
                   from: parentMeta.center,
@@ -88,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
                   child: connectorRender(
                     context,
                     node: node,
-                    parentNode: state.parentOf(node)!,
+                    parentNode: state.mindMap.parentOf(node),
                     nodeMeta: nodeMeta,
                     parentMeta: parentMeta,
                   ),
@@ -98,15 +95,22 @@ class _DashboardState extends State<Dashboard> {
 
             return Stack(
               children: [
-                ...connectors,
-                for (final node in state.nodes.values)
+                // ...connectors,
+                for (final node in [
+                  ...state.mindMap.nodes.values,
+                  state.mindMap.root,
+                ])
                   NodeWrapper(
                     key: ValueKey(node.id),
                     node: node,
-                    nodeMeta: state.getNodeMeta(node),
+                    nodeMeta: state.mindMap.nodeMetaOf(node),
                     onNodeTap: onNodeTap,
                     onNodeSecondaryTap: onNodeSecondaryTap,
-                    child: nodeRender(context, node, state.getNodeMeta(node)),
+                    child: nodeRender(
+                      context,
+                      node,
+                      state.mindMap.nodeMetaOf(node),
+                    ),
                   ),
               ],
             );
@@ -187,7 +191,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
           ),
-          if (!node.isRoot)
+          if (!isRoot(node))
             IconTextButton(
               icon: Icons.delete,
               text: l10n.delete,

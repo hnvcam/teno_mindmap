@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:logging/logging.dart';
+import 'package:teno_mindmap/constants.dart';
 
 import '../models/Node.dart';
 import 'bloc/DashboardBloc.dart';
@@ -84,14 +85,14 @@ class LayoutService {
 
       /// if a node changes in size, then its parent must be rebalanced
       /// if a node changes in position, then its children must be rebalanced
-      for (final entry in state.nodeMetas.entries) {
-        final existingMeta = _currentState.nodeMetas[entry.key];
+      for (final entry in state.mindMap.nodeMetas.entries) {
+        final existingMeta = _currentState.mindMap.nodeMetas[entry.key];
         if (existingMeta == null || existingMeta.size != entry.value.size) {
-          final node = state.nodeOf(entry.key);
-          if (node.isRoot) {
+          final node = state.mindMap.nodeById(entry.key);
+          if (isRoot(node)) {
             changeIds.add(node.id);
           } else {
-            changeIds.add(node.parentId!);
+            changeIds.add(node.parentId);
           }
         } else if ((existingMeta.center - entry.value.center).distance > 0.01) {
           changeIds.add(entry.key);
@@ -99,11 +100,11 @@ class LayoutService {
       }
 
       /// if a node changes in children count, then its parent must be rebalanced
-      for (final node in state.nodes.values) {
-        final existingNode = _currentState.nodes[node.id];
+      for (final node in state.mindMap.nodes.values) {
+        final existingNode = _currentState.mindMap.nodes[node.id];
         if (existingNode == null ||
             existingNode.children.length != node.children.length) {
-          changeIds.add(node.isRoot ? node.id : node.parentId!);
+          changeIds.add(isRoot(node) ? node.id : node.parentId);
         }
       }
 
@@ -134,7 +135,7 @@ class LayoutService {
         endAngle: endAngle,
       );
     } else {
-      final span = getNodeAngularSpan(_currentState.nodeOf(nodeId));
+      final span = getNodeAngularSpan(_currentState.mindMap.nodeById(nodeId));
       added = _taskQueue.addTask(
         nodeId: nodeId,
         startAngle: span.start,
@@ -149,11 +150,11 @@ class LayoutService {
   }
 
   void _executeTask(LayoutTask task) {
-    if (_currentState.nodeOf(task.nodeId).isLeaf) {
+    if (_currentState.mindMap.nodeById(task.nodeId).isLeaf) {
       return;
     }
-    final nodeMeta = _currentState.getNodeMetaById(task.nodeId);
-    final children = _currentState.nodeOf(task.nodeId).children;
+    final nodeMeta = _currentState.mindMap.nodeMetaById(task.nodeId);
+    final children = _currentState.mindMap.nodeById(task.nodeId).children;
     int multiplier = 0;
     bool hasOverlapped = true;
     while (hasOverlapped) {
@@ -166,7 +167,7 @@ class LayoutService {
 
       List<Rect> allRects = [nodeMeta.rect];
       for (final child in children) {
-        final childMeta = _currentState.getNodeMeta(child);
+        final childMeta = _currentState.mindMap.nodeMetaOf(child);
         final childSpan = _getNodeAngularPanWithinParent(
           child,
           parentStart: task.startAngle,
@@ -228,12 +229,13 @@ class LayoutService {
     required double parentStart,
     required double parentEnd,
   }) {
-    final parent = _currentState.parentOf(node);
-    assert(parent != null, 'Must not call this function on Root!');
+    assert(!isRoot(node), 'Must not call this function on root');
+
+    final parent = _currentState.mindMap.parentOf(node);
 
     /// if single child, then it should cover all its parent span
     /// or max of pi
-    if (parent!.children.length == 1) {
+    if (parent.children.length == 1) {
       return (start: parentStart, end: min(parentStart + pi, parentEnd));
     }
 
@@ -275,11 +277,18 @@ class LayoutService {
   }
 
   ({double start, double end}) getNodeAngularSpan(Node node) {
+    if (isRoot(node)) {
+      return (
+        start: _currentState.radialAngleStart,
+        end: _currentState.radialAngleStart + 2 * pi,
+      );
+    }
+
     List<Node> ancestors = [node];
-    Node? parent = _currentState.parentOf(node);
-    while (parent != null && !parent.isRoot) {
+    Node parent = _currentState.mindMap.parentOf(node);
+    while (!isRoot(parent)) {
       ancestors.insert(0, parent);
-      parent = _currentState.parentOf(parent);
+      parent = _currentState.mindMap.parentOf(parent);
     }
 
     /// start from Root, it has 2 * pi span
@@ -287,7 +296,7 @@ class LayoutService {
     double endAngle = _currentState.radialAngleStart + 2 * pi;
     for (int i = 0; i < ancestors.length; i++) {
       final ancestor = ancestors[i];
-      if (ancestor.isRoot) {
+      if (isRoot(ancestor)) {
         continue;
       }
       final ancestorSpan = _getNodeAngularPanWithinParent(

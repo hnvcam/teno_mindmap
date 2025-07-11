@@ -1,4 +1,3 @@
-// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -10,96 +9,251 @@ part of '../DashboardState.dart';
 // FreezedGenerator
 // **************************************************************************
 
-// dart format off
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+
+DashboardState _$DashboardStateFromJson(Map<String, dynamic> json) {
+  return _DashboardState.fromJson(json);
+}
 
 /// @nodoc
 mixin _$DashboardState {
+  MindMap get mindMap => throw _privateConstructorUsedError;
 
- Map<String, Node> get nodes; Map<String, NodeMeta> get nodeMetas; Node? get root;/// minimum space between parent's center and child's center
-/// excluding the Node.radius
- double get minSpacing;/// if there is an overlapping on nodes, increase the space by this step
- double get stepSpacing;/// Where the angle of the radial layout start, in radian.
- double get radialAngleStart;
+  /// minimum space between parent's center and child's center
+  /// excluding the Node.radius
+  double get minSpacing => throw _privateConstructorUsedError;
+
+  /// if there is an overlapping on nodes, increase the space by this step
+  double get stepSpacing => throw _privateConstructorUsedError;
+
+  /// Where the angle of the radial layout start, in radian.
+  double get radialAngleStart => throw _privateConstructorUsedError;
 
   /// Serializes this DashboardState to a JSON map.
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&const DeepCollectionEquality().equals(other.nodes, nodes)&&const DeepCollectionEquality().equals(other.nodeMetas, nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.minSpacing, minSpacing) || other.minSpacing == minSpacing)&&(identical(other.stepSpacing, stepSpacing) || other.stepSpacing == stepSpacing)&&(identical(other.radialAngleStart, radialAngleStart) || other.radialAngleStart == radialAngleStart));
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $DashboardStateCopyWith<DashboardState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(nodes),const DeepCollectionEquality().hash(nodeMetas),root,minSpacing,stepSpacing,radialAngleStart);
-
-@override
-String toString() {
-  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, minSpacing: $minSpacing, stepSpacing: $stepSpacing, radialAngleStart: $radialAngleStart)';
+/// @nodoc
+abstract class $DashboardStateCopyWith<$Res> {
+  factory $DashboardStateCopyWith(
+          DashboardState value, $Res Function(DashboardState) then) =
+      _$DashboardStateCopyWithImpl<$Res, DashboardState>;
+  @useResult
+  $Res call(
+      {MindMap mindMap,
+      double minSpacing,
+      double stepSpacing,
+      double radialAngleStart});
 }
 
+/// @nodoc
+class _$DashboardStateCopyWithImpl<$Res, $Val extends DashboardState>
+    implements $DashboardStateCopyWith<$Res> {
+  _$DashboardStateCopyWithImpl(this._value, this._then);
 
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mindMap = null,
+    Object? minSpacing = null,
+    Object? stepSpacing = null,
+    Object? radialAngleStart = null,
+  }) {
+    return _then(_value.copyWith(
+      mindMap: null == mindMap
+          ? _value.mindMap
+          : mindMap // ignore: cast_nullable_to_non_nullable
+              as MindMap,
+      minSpacing: null == minSpacing
+          ? _value.minSpacing
+          : minSpacing // ignore: cast_nullable_to_non_nullable
+              as double,
+      stepSpacing: null == stepSpacing
+          ? _value.stepSpacing
+          : stepSpacing // ignore: cast_nullable_to_non_nullable
+              as double,
+      radialAngleStart: null == radialAngleStart
+          ? _value.radialAngleStart
+          : radialAngleStart // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
+  }
 }
 
+/// @nodoc
+abstract class _$$DashboardStateImplCopyWith<$Res>
+    implements $DashboardStateCopyWith<$Res> {
+  factory _$$DashboardStateImplCopyWith(_$DashboardStateImpl value,
+          $Res Function(_$DashboardStateImpl) then) =
+      __$$DashboardStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {MindMap mindMap,
+      double minSpacing,
+      double stepSpacing,
+      double radialAngleStart});
+}
 
+/// @nodoc
+class __$$DashboardStateImplCopyWithImpl<$Res>
+    extends _$DashboardStateCopyWithImpl<$Res, _$DashboardStateImpl>
+    implements _$$DashboardStateImplCopyWith<$Res> {
+  __$$DashboardStateImplCopyWithImpl(
+      _$DashboardStateImpl _value, $Res Function(_$DashboardStateImpl) _then)
+      : super(_value, _then);
 
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mindMap = null,
+    Object? minSpacing = null,
+    Object? stepSpacing = null,
+    Object? radialAngleStart = null,
+  }) {
+    return _then(_$DashboardStateImpl(
+      mindMap: null == mindMap
+          ? _value.mindMap
+          : mindMap // ignore: cast_nullable_to_non_nullable
+              as MindMap,
+      minSpacing: null == minSpacing
+          ? _value.minSpacing
+          : minSpacing // ignore: cast_nullable_to_non_nullable
+              as double,
+      stepSpacing: null == stepSpacing
+          ? _value.stepSpacing
+          : stepSpacing // ignore: cast_nullable_to_non_nullable
+              as double,
+      radialAngleStart: null == radialAngleStart
+          ? _value.radialAngleStart
+          : radialAngleStart // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
+  }
+}
 
 /// @nodoc
 @JsonSerializable()
+class _$DashboardStateImpl extends _DashboardState {
+  const _$DashboardStateImpl(
+      {required this.mindMap,
+      this.minSpacing = 50.0,
+      this.stepSpacing = 20.0,
+      this.radialAngleStart = -pi / 2})
+      : super._();
 
-class _DashboardState extends DashboardState {
-  const _DashboardState({final  Map<String, Node> nodes = const {}, final  Map<String, NodeMeta> nodeMetas = const {}, this.root, this.minSpacing = 50.0, this.stepSpacing = 20.0, this.radialAngleStart = -pi / 2}): _nodes = nodes,_nodeMetas = nodeMetas,super._();
-  factory _DashboardState.fromJson(Map<String, dynamic> json) => _$DashboardStateFromJson(json);
+  factory _$DashboardStateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DashboardStateImplFromJson(json);
 
- final  Map<String, Node> _nodes;
-@override@JsonKey() Map<String, Node> get nodes {
-  if (_nodes is EqualUnmodifiableMapView) return _nodes;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_nodes);
+  @override
+  final MindMap mindMap;
+
+  /// minimum space between parent's center and child's center
+  /// excluding the Node.radius
+  @override
+  @JsonKey()
+  final double minSpacing;
+
+  /// if there is an overlapping on nodes, increase the space by this step
+  @override
+  @JsonKey()
+  final double stepSpacing;
+
+  /// Where the angle of the radial layout start, in radian.
+  @override
+  @JsonKey()
+  final double radialAngleStart;
+
+  @override
+  String toString() {
+    return 'DashboardState(mindMap: $mindMap, minSpacing: $minSpacing, stepSpacing: $stepSpacing, radialAngleStart: $radialAngleStart)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DashboardStateImpl &&
+            (identical(other.mindMap, mindMap) || other.mindMap == mindMap) &&
+            (identical(other.minSpacing, minSpacing) ||
+                other.minSpacing == minSpacing) &&
+            (identical(other.stepSpacing, stepSpacing) ||
+                other.stepSpacing == stepSpacing) &&
+            (identical(other.radialAngleStart, radialAngleStart) ||
+                other.radialAngleStart == radialAngleStart));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, mindMap, minSpacing, stepSpacing, radialAngleStart);
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DashboardStateImplCopyWith<_$DashboardStateImpl> get copyWith =>
+      __$$DashboardStateImplCopyWithImpl<_$DashboardStateImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$DashboardStateImplToJson(
+      this,
+    );
+  }
 }
 
- final  Map<String, NodeMeta> _nodeMetas;
-@override@JsonKey() Map<String, NodeMeta> get nodeMetas {
-  if (_nodeMetas is EqualUnmodifiableMapView) return _nodeMetas;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_nodeMetas);
+abstract class _DashboardState extends DashboardState {
+  const factory _DashboardState(
+      {required final MindMap mindMap,
+      final double minSpacing,
+      final double stepSpacing,
+      final double radialAngleStart}) = _$DashboardStateImpl;
+  const _DashboardState._() : super._();
+
+  factory _DashboardState.fromJson(Map<String, dynamic> json) =
+      _$DashboardStateImpl.fromJson;
+
+  @override
+  MindMap get mindMap;
+
+  /// minimum space between parent's center and child's center
+  /// excluding the Node.radius
+  @override
+  double get minSpacing;
+
+  /// if there is an overlapping on nodes, increase the space by this step
+  @override
+  double get stepSpacing;
+
+  /// Where the angle of the radial layout start, in radian.
+  @override
+  double get radialAngleStart;
+
+  /// Create a copy of DashboardState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DashboardStateImplCopyWith<_$DashboardStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
-
-@override final  Node? root;
-/// minimum space between parent's center and child's center
-/// excluding the Node.radius
-@override@JsonKey() final  double minSpacing;
-/// if there is an overlapping on nodes, increase the space by this step
-@override@JsonKey() final  double stepSpacing;
-/// Where the angle of the radial layout start, in radian.
-@override@JsonKey() final  double radialAngleStart;
-
-
-@override
-Map<String, dynamic> toJson() {
-  return _$DashboardStateToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&const DeepCollectionEquality().equals(other._nodes, _nodes)&&const DeepCollectionEquality().equals(other._nodeMetas, _nodeMetas)&&(identical(other.root, root) || other.root == root)&&(identical(other.minSpacing, minSpacing) || other.minSpacing == minSpacing)&&(identical(other.stepSpacing, stepSpacing) || other.stepSpacing == stepSpacing)&&(identical(other.radialAngleStart, radialAngleStart) || other.radialAngleStart == radialAngleStart));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_nodes),const DeepCollectionEquality().hash(_nodeMetas),root,minSpacing,stepSpacing,radialAngleStart);
-
-@override
-String toString() {
-  return 'DashboardState(nodes: $nodes, nodeMetas: $nodeMetas, root: $root, minSpacing: $minSpacing, stepSpacing: $stepSpacing, radialAngleStart: $radialAngleStart)';
-}
-
-
-}
-
-
-
-
-// dart format on

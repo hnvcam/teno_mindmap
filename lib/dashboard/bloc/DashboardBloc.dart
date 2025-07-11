@@ -45,7 +45,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     RequestAddChildNode event,
     Emitter<DashboardState> emit,
   ) {
-    emit(state.addNode(parentId: event.parentNodeId, nodeMeta: event.nodeMeta));
+    emit(
+      state.copyWith(
+        mindMap: state.mindMap.addNode(
+          parentId: event.parentNodeId,
+          nodeMeta: event.nodeMeta,
+        ),
+      ),
+    );
   }
 
   FutureOr<void> _onRequestRebalancingNodes(
@@ -59,15 +66,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     NodeSizeChangedEvent event,
     Emitter<DashboardState> emit,
   ) {
-    if (!state.nodeMetas.containsKey(event.nodeId)) {
-      _log.severe('Node ${event.nodeId} does not exist');
-      return null;
-    }
-
     emit(
-      state.updateNode(
-        event.nodeId,
-        state.getNodeMetaById(event.nodeId).copyWith(size: event.size),
+      state.copyWith(
+        mindMap: state.mindMap.updateNode(
+          event.nodeId,
+          state.mindMap.nodeMetaById(event.nodeId).copyWith(size: event.size),
+        ),
       ),
     );
     _log.info('Node ${event.nodeId} updated size: ${event.size}');
@@ -78,11 +82,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Emitter<DashboardState> emit,
   ) {
     emit(
-      state.updateNode(
-        event.nodeId,
-        state
-            .getNodeMetaById(event.nodeId)
-            .copyWith(center: event.center, isPositionLocked: true),
+      state.copyWith(
+        mindMap: state.mindMap.updateNode(
+          event.nodeId,
+          state.mindMap
+              .nodeMetaById(event.nodeId)
+              .copyWith(center: event.center, isPositionLocked: true),
+        ),
       ),
     );
   }
@@ -91,12 +97,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     RequestUpdateNodeCenter event,
     Emitter<DashboardState> emit,
   ) {
-    final nodeMeta = state.getNodeMetaById(event.nodeId);
+    final nodeMeta = state.mindMap.nodeMetaById(event.nodeId);
     if (nodeMeta.isPositionLocked) {
       return null;
     }
     emit(
-      state.updateNode(event.nodeId, nodeMeta.copyWith(center: event.center)),
+      state.copyWith(
+        mindMap: state.mindMap.updateNode(
+          event.nodeId,
+          nodeMeta.copyWith(center: event.center),
+        ),
+      ),
     );
   }
 
@@ -104,19 +115,21 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     RequestUpdateNodeMeta event,
     Emitter<DashboardState> emit,
   ) {
-    final nodeMeta = state.getNodeMetaById(event.nodeId);
+    final nodeMeta = state.mindMap.nodeMetaById(event.nodeId);
     emit(
-      state.updateNode(
-        event.nodeId,
-        nodeMeta.copyWith(
-          title:
-              event.title?.isNotEmpty == true ? event.title! : nodeMeta.title,
-          data:
-              event.data?.isNotEmpty == true
-                  ? (event.merged
-                      ? {...nodeMeta.data, ...event.data!}
-                      : event.data!)
-                  : nodeMeta.data,
+      state.copyWith(
+        mindMap: state.mindMap.updateNode(
+          event.nodeId,
+          nodeMeta.copyWith(
+            title:
+                event.title?.isNotEmpty == true ? event.title! : nodeMeta.title,
+            data:
+                event.data?.isNotEmpty == true
+                    ? (event.merged
+                        ? {...nodeMeta.data, ...event.data!}
+                        : event.data!)
+                    : nodeMeta.data,
+          ),
         ),
       ),
     );
@@ -126,6 +139,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     RequestRemoveNode event,
     Emitter<DashboardState> emit,
   ) {
-    emit(state.removeNode(event.nodeId));
+    emit(state.copyWith(mindMap: state.mindMap.removeNode(event.nodeId)));
   }
 }

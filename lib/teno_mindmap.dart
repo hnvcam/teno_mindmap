@@ -1,4 +1,4 @@
 library;
 
-export 'MindMap.dart';
+export 'MindMapEditor.dart';
 export 'constants.dart';
