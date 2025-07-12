@@ -23,6 +23,111 @@ void main() {
     emptyStateBloc.close();
   });
 
+  group('DashboardBloc - add child node', () {
+    late DashboardState rootState;
+
+    blocTest(
+      'Add node to root',
+      setUp: () {
+        rootState = DashboardState.withRoot('test');
+      },
+      build: () => DashboardBloc(rootState),
+      act:
+          (bloc) => bloc.add(
+            RequestAddChildNode(
+              parentNodeId: rootNodeId,
+              nodeMeta: NodeMeta(title: 'first child'),
+            ),
+          ),
+      verify: (bloc) {
+        expect(bloc.state.mindMap.nodes, hasLength(1));
+        expect(bloc.state.mindMap.nodeMetas, hasLength(1));
+        expect(bloc.state.mindMap.nodeMetas.values.first.title, 'first child');
+        expect(bloc.state.mindMap.nodes.values.first.parentId, rootNodeId);
+      },
+    );
+
+    blocTest(
+      'Add node to none root node',
+      setUp: () {
+        rootState = DashboardState(
+          mindMap: MindMap(id: 'test', title: 'root').addNode(
+            parentId: rootNodeId,
+            nodeMeta: NodeMeta(id: 'rootChild', title: 'child of root'),
+          ),
+        );
+      },
+      build: () => DashboardBloc(rootState),
+      act:
+          (bloc) => bloc.add(
+            RequestAddChildNode(
+              parentNodeId: 'rootChild',
+              nodeMeta: NodeMeta(id: 'grandChild', title: 'grandChild'),
+            ),
+          ),
+      verify: (bloc) {
+        expect(bloc.state.mindMap.nodes, hasLength(2));
+        expect(bloc.state.mindMap.nodeMetas, hasLength(2));
+        expect(
+          bloc.state.mindMap.nodeMetas.values,
+          contains(predicate<NodeMeta>((meta) => meta.title == 'grandChild')),
+        );
+        expect(bloc.state.mindMap.nodeById('rootChild').parentId, rootNodeId);
+        expect(bloc.state.mindMap.nodeById('grandChild').parentId, 'rootChild');
+      },
+    );
+  });
+
+  group('DashboardBloc - remove child node', () {
+    late DashboardState rootState;
+
+    blocTest(
+      'Remove root child',
+      setUp: () {
+        rootState = DashboardState(
+          mindMap: MindMap(id: 'test', title: 'root').addNode(
+            parentId: rootNodeId,
+            nodeMeta: NodeMeta(id: 'rootChild', title: 'child of root'),
+          ),
+        );
+      },
+      build: () => DashboardBloc(rootState),
+      act: (bloc) => bloc.add(RequestRemoveNode(nodeId: 'rootChild')),
+      verify: (bloc) {
+        expect(bloc.state.mindMap.nodes, hasLength(0));
+        expect(bloc.state.mindMap.nodeMetas, hasLength(0));
+      },
+    );
+
+    blocTest(
+      'Remove grand child',
+      setUp: () {
+        rootState = DashboardState(
+          mindMap: MindMap(id: 'test', title: 'root')
+              .addNode(
+                parentId: rootNodeId,
+                nodeMeta: NodeMeta(id: 'rootChild', title: 'child of root'),
+              )
+              .addNode(
+                parentId: 'rootChild',
+                nodeMeta: NodeMeta(id: 'grandChild', title: 'grandChild'),
+              ),
+        );
+      },
+      build: () => DashboardBloc(rootState),
+      act: (bloc) => bloc.add(RequestRemoveNode(nodeId: 'grandChild')),
+      verify: (bloc) {
+        expect(bloc.state.mindMap.nodes, hasLength(1));
+        expect(bloc.state.mindMap.nodeMetas, hasLength(1));
+        expect(
+          bloc.state.mindMap.nodeMetaById('rootChild').title,
+          'child of root',
+        );
+        expect(bloc.state.mindMap.nodeById('rootChild').parentId, rootNodeId);
+      },
+    );
+  });
+
   group('DashboardBloc - Rebalancing', () {
     late DashboardState testState;
     late List<Node> testChildren;
