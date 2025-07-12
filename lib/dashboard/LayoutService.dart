@@ -94,7 +94,8 @@ class LayoutService {
           } else {
             changeIds.add(node.parentId);
           }
-        } else if ((existingMeta.center - entry.value.center).distance > 0.01) {
+        } else if ((existingMeta.center - entry.value.center).distanceSquared >
+            distanceSensitive) {
           changeIds.add(entry.key);
         }
       }
@@ -196,9 +197,12 @@ class LayoutService {
           allRects.add(updatedChildRect);
 
           /// this does not make _currentState updated as it needs a round trip from DashboardBloc.
-          _nodeCenterStream.add(
-            RequestUpdateNodeCenter(nodeId: child.id, center: childCenter),
-          );
+          if ((childCenter - childMeta.center).distanceSquared >
+              distanceSensitive) {
+            _nodeCenterStream.add(
+              RequestUpdateNodeCenter(nodeId: child.id, center: childCenter),
+            );
+          }
           _log.info(
             'Requested updating center of node ${child.id} to $childCenter',
           );
