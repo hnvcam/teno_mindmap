@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-DashboardState _$DashboardStateFromJson(Map<String, dynamic> json) {
-  return _DashboardState.fromJson(json);
-}
-
 /// @nodoc
 mixin _$DashboardState {
   MindMap get mindMap => throw _privateConstructorUsedError;
@@ -31,9 +27,6 @@ mixin _$DashboardState {
 
   /// Where the angle of the radial layout start, in radian.
   double get radialAngleStart => throw _privateConstructorUsedError;
-
-  /// Serializes this DashboardState to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of DashboardState
   /// with the given fields replaced by the non-null parameter values.
@@ -151,7 +144,7 @@ class __$$DashboardStateImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$DashboardStateImpl extends _DashboardState {
   const _$DashboardStateImpl(
       {required this.mindMap,
@@ -159,9 +152,6 @@ class _$DashboardStateImpl extends _DashboardState {
       this.stepSpacing = 20.0,
       this.radialAngleStart = -pi / 2})
       : super._();
-
-  factory _$DashboardStateImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DashboardStateImplFromJson(json);
 
   @override
   final MindMap mindMap;
@@ -201,7 +191,6 @@ class _$DashboardStateImpl extends _DashboardState {
                 other.radialAngleStart == radialAngleStart));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, mindMap, minSpacing, stepSpacing, radialAngleStart);
@@ -214,13 +203,6 @@ class _$DashboardStateImpl extends _DashboardState {
   _$$DashboardStateImplCopyWith<_$DashboardStateImpl> get copyWith =>
       __$$DashboardStateImplCopyWithImpl<_$DashboardStateImpl>(
           this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DashboardStateImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _DashboardState extends DashboardState {
@@ -230,9 +212,6 @@ abstract class _DashboardState extends DashboardState {
       final double stepSpacing,
       final double radialAngleStart}) = _$DashboardStateImpl;
   const _DashboardState._() : super._();
-
-  factory _DashboardState.fromJson(Map<String, dynamic> json) =
-      _$DashboardStateImpl.fromJson;
 
   @override
   MindMap get mindMap;

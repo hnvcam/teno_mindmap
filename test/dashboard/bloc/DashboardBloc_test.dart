@@ -128,6 +128,97 @@ void main() {
     );
   });
 
+  group('DashboardBloc - update child data', () {
+    late DashboardState rootState;
+
+    blocTest(
+      'update root title',
+      setUp: () {
+        rootState = DashboardState.withRoot('test');
+      },
+      build: () => DashboardBloc(rootState),
+      act:
+          (bloc) => bloc.add(
+            RequestUpdateNodeMeta(nodeId: rootNodeId, title: 'new title'),
+          ),
+      verify: (bloc) {
+        expect(bloc.state.mindMap.nodeMetaById(rootNodeId).title, 'new title');
+      },
+    );
+
+    blocTest(
+      'update root data',
+      setUp: () {
+        rootState = DashboardState.withRoot('test');
+      },
+      build: () => DashboardBloc(rootState),
+      act:
+          (bloc) => bloc.add(
+            RequestUpdateNodeMeta(nodeId: rootNodeId, data: {'custom': true}),
+          ),
+      verify: (bloc) {
+        expect(bloc.state.mindMap.nodeMetaById(rootNodeId).title, 'test');
+        expect(bloc.state.mindMap.nodeMetaById(rootNodeId).data, {
+          'custom': true,
+        });
+      },
+    );
+
+    blocTest(
+      'update child node title',
+      setUp: () {
+        rootState = DashboardState(
+          mindMap: MindMap(id: 'test', title: 'root').addNode(
+            parentId: rootNodeId,
+            nodeMeta: NodeMeta(id: 'rootChild', title: 'child of root'),
+          ),
+        );
+      },
+      build: () => DashboardBloc(rootState),
+      act:
+          (bloc) => bloc.add(
+            RequestUpdateNodeMeta(nodeId: 'rootChild', title: 'new title'),
+          ),
+      verify: (bloc) {
+        expect(bloc.state.mindMap.nodeMetaById('rootChild').title, 'new title');
+      },
+    );
+
+    blocTest(
+      'update child node data override',
+      setUp: () {
+        rootState = DashboardState(
+          mindMap: MindMap(id: 'test', title: 'root').addNode(
+            parentId: rootNodeId,
+            nodeMeta: NodeMeta(
+              id: 'rootChild',
+              title: 'child of root',
+              data: {'custom': true},
+            ),
+          ),
+        );
+      },
+      build: () => DashboardBloc(rootState),
+      act:
+          (bloc) => bloc.add(
+            RequestUpdateNodeMeta(
+              nodeId: 'rootChild',
+              data: {'override': true},
+              merged: false,
+            ),
+          ),
+      verify: (bloc) {
+        expect(
+          bloc.state.mindMap.nodeMetaById('rootChild').title,
+          'child of root',
+        );
+        expect(bloc.state.mindMap.nodeMetaById('rootChild').data, {
+          'override': true,
+        });
+      },
+    );
+  });
+
   group('DashboardBloc - Rebalancing', () {
     late DashboardState testState;
     late List<Node> testChildren;

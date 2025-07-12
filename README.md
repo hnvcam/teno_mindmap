@@ -2,6 +2,8 @@
 [![codecov](https://codecov.io/gh/hnvcam/teno_mindmap/graph/badge.svg?token=02SX31INHW)](https://codecov.io/gh/hnvcam/teno_mindmap)
 [![Pub Package](https://img.shields.io/pub/v/teno_mindmap)](https://pub.dev/packages/teno_mindmap)
 
+> **⚠️ WARNING:** I have downgraded `freezed` to version 2.5.7 so old projects will not have compatibility issues with `source_gen` 2.0.0
+
 Simple implementation of a Mind Map using a Radial layout.
 This layout ensures child nodes do not overlap with their parents or siblings by automatically rebalancing node positions. 
 Additionally, nodes with more children automatically take up more angular span.

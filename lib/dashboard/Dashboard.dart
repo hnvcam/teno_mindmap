@@ -95,7 +95,7 @@ class _DashboardState extends State<Dashboard> {
 
             return Stack(
               children: [
-                // ...connectors,
+                ...connectors,
                 for (final node in [
                   ...state.mindMap.nodes.values,
                   state.mindMap.root,
